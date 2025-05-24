@@ -23,14 +23,14 @@ repositories {
 dependencies {
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
-
-    implementation("org.liquibase:liquibase-core:")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+
     implementation("jakarta.servlet:jakarta.servlet-api:$jakartaVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("javax.mail:javax.mail-api:1.6.2")
