@@ -2,6 +2,8 @@ body {
     background-color: #ffffff;
     color: #007568;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -13,6 +15,7 @@ body {
 .title {
     color: #007568;
     font-weight: bold;
+    font-size: x-large;
 }
 
 /* для логотипа - жирный текст */
@@ -41,35 +44,7 @@ body {
     backdrop-filter: blur(4px);
 }
 
-/* фон для регистрации и авторизации */
-.registration-page {
-    background-image: url("https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780027/registration-back2_e4laqz.jpg");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    height: 100vh;
-}
 
-.background-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    backdrop-filter: blur(10px);
-}
-
-
-
-
-/* форма для регистрации и авторизации */
-.registration-form {
-    background-color: rgba(255, 255, 255, 0.85);
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px;
-}
 
 /*  форма для навигационной модели */
 .navbar {

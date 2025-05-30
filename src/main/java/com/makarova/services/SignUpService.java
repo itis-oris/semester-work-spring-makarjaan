@@ -2,6 +2,6 @@ package com.makarova.services;
 
 import com.makarova.dto.UserDto;
 
-public interface UserService {
+public interface SignUpService {
     void registerUser(UserDto userDto);
 }

@@ -1,6 +1,10 @@
 package com.makarova.repositories;
 
-import com.makarova.models.User;
+import com.makarova.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsersRepository extends JpaRepository<User, Long> { }
+import java.util.Optional;
+
+public interface UsersRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
+}
