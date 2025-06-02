@@ -35,7 +35,6 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
-
     implementation("jakarta.servlet:jakarta.servlet-api:$jakartaVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("javax.mail:javax.mail-api:1.6.2")
