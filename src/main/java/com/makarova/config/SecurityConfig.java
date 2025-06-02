@@ -1,55 +1,55 @@
 package com.makarova.config;
 
 
-import com.makarova.filter.JwtAuthenticationFilter;
-import com.makarova.service.JwtService;
-import com.makarova.service.UserService;
+import com.makarova.filter.JwtFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
+
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    private final JwtFilter jwtFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/signIn", "/signUp", "/login", "/auth/**").permitAll()
-                        .requestMatchers("/profile").authenticated()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .anyRequest().authenticated()
-                )
-//                .formLogin(form -> form
-//                        .loginPage("/signIn")
-//                        .usernameParameter("email")
-//                        .passwordParameter("password")
-//                        .defaultSuccessUrl("/profile")
-//                        .failureUrl("/signIn?error")
-//                )
-                .cors(cors -> cors.configurationSource(request -> {
-                    var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfiguration.setAllowedHeaders(List.of("*"));
-                    corsConfiguration.setAllowCredentials(true);
-                    return corsConfiguration;
-                }))
+                        .requestMatchers("/css/**", "/signIn", "/signUp").permitAll()
+                        //.requestMatchers("/main").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest()
+                ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 }

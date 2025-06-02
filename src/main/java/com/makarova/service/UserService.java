@@ -1,12 +1,10 @@
 package com.makarova.service;
 
-import com.makarova.dto.UserDto;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import com.makarova.dto.JwtResponse;
+import com.makarova.dto.RegisterRequest;
+import com.makarova.entity.User;
 
-import java.util.List;
 
 public interface UserService {
-    void registerUser(UserDto userDto);
-    List<UserDto> getAllUsers();
-    UserDetailsService userDetailsService();
+    JwtResponse register(RegisterRequest request);
 }

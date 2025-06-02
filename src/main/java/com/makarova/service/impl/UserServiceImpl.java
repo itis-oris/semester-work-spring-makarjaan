@@ -1,79 +1,52 @@
 package com.makarova.service.impl;
 
-import com.makarova.dto.UserDto;
+import com.makarova.dto.JwtResponse;
+import com.makarova.dto.LoginRequest;
+import com.makarova.dto.RegisterRequest;
+import com.makarova.entity.Role;
 import com.makarova.entity.User;
-import com.makarova.repository.UsersRepository;
+import com.makarova.repository.UserRepository;
+import com.makarova.service.AuthService;
 import com.makarova.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
+
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UsersRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Override
-    public void registerUser(UserDto userDto) {
+    @Autowired
+    private AuthService authService;
 
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+
+    @Override
+    public JwtResponse register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
 
-        User user = User.builder()
-                .email(userDto.getEmail())
-                .username(userDto.getUsername())
-                .phone(userDto.getPhone())
-                .hashPassword(passwordEncoder.encode(userDto.getPassword()))
-                .role(User.Role.USER)
+        User newUser = User.builder()
+                .email(request.getEmail())
+                .username(request.getUsername())
+                .phone(request.getPhone())
+                .hashPassword(passwordEncoder.encode(request.getPassword()))
+                .roles(Collections.singleton(Role.USER))
                 .state(User.State.ACTIVE)
                 .build();
 
-        userRepository.save(user);
+        userRepository.save(newUser);
+
+        return authService.login(new LoginRequest(request.getEmail(), request.getPassword()));
     }
 
-
-    @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(user -> UserDto.builder()
-                        .email(user.getEmail())
-                        .username(user.getUsername())
-                        .phone(user.getPhone())
-                        .build())
-                .collect(Collectors.toList());
-    }
-
-    public User getByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-    }
-
-
-    public UserDetailsService userDetailsService() {
-        return this::getByEmail;
-    }
-
-    public User getCurrentUser() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByEmail(email);
-    }
-
-    @Deprecated
-    public void grantAdminRole() {
-        User user = getCurrentUser();
-        user.setRole(User.Role.ADMIN);
-        userRepository.save(user);
-    }
 }

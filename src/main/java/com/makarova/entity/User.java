@@ -5,13 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Builder
@@ -19,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "account")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,53 +38,14 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
-    @Enumerated(value = EnumType.STRING)
-    private Role role;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.toString());
-        return Collections.singleton(authority);
-    }
-
-    @Override
-    public String getPassword() {
-        return hashPassword;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return isActive();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isActive();
-    }
-
-
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = Role.class)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<Role> roles;
 
     public enum State {
         ACTIVE, BANNED
-    }
-
-    public enum Role {
-        USER, ADMIN
     }
 
     public boolean isActive() {
@@ -95,10 +55,5 @@ public class User implements UserDetails {
     public boolean isBanned() {
         return this.state == State.BANNED;
     }
-
-    public boolean isAdmin() {
-        return this.role == Role.ADMIN;
-    }
-
 
 }
