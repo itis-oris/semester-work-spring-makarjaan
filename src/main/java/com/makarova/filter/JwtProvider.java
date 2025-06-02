@@ -4,6 +4,7 @@ import com.makarova.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,65 +38,73 @@ public class JwtProvider {
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
     }
 
-    public String generateAccessToken(User user) {
-        LocalDateTime now = LocalDateTime.now();
-        Instant accessExpirationTime = now.plusHours(1).atZone(ZoneId.systemDefault()).toInstant();
+    public String generateAccessToken(@NonNull User user) {
+        final LocalDateTime now = LocalDateTime.now();
+        final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
+        final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getUsername())
-                .setExpiration(Date.from(accessExpirationTime))
+                .setSubject(user.getEmail())
+                .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
                 .claim("roles", user.getRoles())
                 .claim("name", user.getUsername())
                 .compact();
     }
 
-    public String generateRefreshToken(User user) {
-        LocalDateTime now = LocalDateTime.now();
-        Instant accessExpirationTime = now.plusMonths(1).atZone(ZoneId.systemDefault()).toInstant();
+    public String generateRefreshToken(@NonNull User user) {
+        final LocalDateTime now = LocalDateTime.now();
+        final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
+        final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getUsername())
-                .setExpiration(Date.from(accessExpirationTime))
+                .setSubject(user.getEmail())
+                .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
                 .compact();
     }
 
-    public boolean validateAccess(String token) {
-        return validateToken(token, jwtAccessSecret);
+    public boolean validateAccessToken(@NonNull String accessToken) {
+        return validateToken(accessToken, jwtAccessSecret);
     }
 
-    public boolean validateRefresh(String token) {
-        return validateToken(token, jwtRefreshSecret);
+    public boolean validateRefreshToken(@NonNull String refreshToken) {
+        return validateToken(refreshToken, jwtRefreshSecret);
     }
 
-    public Claims getAccessClaims(String token) {
-        return getClaims(token, jwtAccessSecret);
-    }
-
-    public Claims getRefreshClaims(String token) {
-        return getClaims(token, jwtRefreshSecret);
-    }
-
-    private Claims getClaims(String token, Key secret) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secret)
-                .build()
-                .parseClaimsJwt(token)
-                .getBody();
-    }
-
-    private boolean validateToken(String token, Key secret) {
+    private boolean validateToken(@NonNull String token, @NonNull Key secret) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secret)
                     .build()
-                    .parseClaimsJwt(token);
+                    .parseClaimsJws(token);
             return true;
-        } catch (ExpiredJwtException e) {
-        } catch (UnsupportedJwtException e) {
-        } catch (MalformedJwtException e) {
-        } catch (SignatureException e) {
+        } catch (ExpiredJwtException expEx) {
+            System.out.println("Token expired");
+        } catch (UnsupportedJwtException unsEx) {
+            System.out.println("Unsupported jw");
+        } catch (MalformedJwtException mjEx) {
+            System.out.println("Malformed jwt");
+        } catch (SignatureException sEx) {
+            System.out.println("Invalid signat");
         } catch (Exception e) {
+            System.out.println("invalid token");
         }
         return false;
     }
+
+    public Claims getAccessClaims(@NonNull String token) {
+        return getClaims(token, jwtAccessSecret);
+    }
+
+    public Claims getRefreshClaims(@NonNull String token) {
+        return getClaims(token, jwtRefreshSecret);
+    }
+
+    private Claims getClaims(@NonNull String token, @NonNull Key secret) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
 }

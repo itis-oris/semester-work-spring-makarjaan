@@ -1,14 +1,8 @@
 package com.makarova.controllers;
 
 import com.makarova.aspect.Loggable;
-import com.makarova.dto.JwtResponse;
-import com.makarova.dto.LoginRequest;
-import com.makarova.dto.RegisterRequest;
 import com.makarova.dto.UserDto;
-import com.makarova.service.AuthService;
 import com.makarova.service.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,10 +26,9 @@ class UserController {
 
     @PostMapping("/signUp")
     public String handleRegistration(
-            @Valid @ModelAttribute("user") RegisterRequest user,
+            @Valid @ModelAttribute("user") UserDto user,
             BindingResult result,
-            Model model,
-            HttpServletResponse response) {
+            Model model) {
 
         if (result.hasErrors()) {
             String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
@@ -53,10 +46,4 @@ class UserController {
             return "sign_up_page";
         }
     }
-
-    @GetMapping("/signIn")
-    public String getAuthPage() { return "sign_in_page"; }
-
-
-
 }

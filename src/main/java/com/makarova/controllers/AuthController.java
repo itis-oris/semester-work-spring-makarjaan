@@ -2,14 +2,10 @@ package com.makarova.controllers;
 
 import com.makarova.dto.JwtRefreshRequest;
 import com.makarova.dto.JwtResponse;
-import com.makarova.dto.LoginRequest;
-import com.makarova.dto.RegisterRequest;
-import com.makarova.service.AuthService;
+import com.makarova.dto.JwtRequest;
 import com.makarova.service.UserService;
+import com.makarova.service.impl.AuthService;
 import jakarta.security.auth.message.AuthException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,42 +14,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
+
     private final AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req, HttpServletResponse response) {
-        JwtResponse jwt = userService.register(req);
-        setCookies(response, jwt);
-        return ResponseEntity.ok(jwt);
+    @PostMapping("login")
+    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) throws AuthException {
+        final JwtResponse token = authService.login(authRequest);
+        return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req, HttpServletResponse response) {
-        JwtResponse jwt = authService.login(req);
-        setCookies(response, jwt);
-        return ResponseEntity.ok(jwt);
+    @PostMapping("token")
+    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody JwtRefreshRequest request) throws AuthException {
+        final JwtResponse token = authService.getAccessToken(request.getToken());
+        return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@RequestBody JwtRefreshRequest req, HttpServletResponse response) throws Exception {
-        JwtResponse jwt = authService.refresh(req.getToken());
-        setCookies(response, jwt);
-        return ResponseEntity.ok(jwt);
+    @PostMapping("refresh")
+    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody JwtRefreshRequest request) throws AuthException {
+        final JwtResponse token = authService.refresh(request.getToken());
+        return ResponseEntity.ok(token);
     }
 
-    private void setCookies(HttpServletResponse response, JwtResponse jwt) {
-        Cookie accessToken = new Cookie("access_token", jwt.getAccessToken());
-        accessToken.setHttpOnly(true);
-        accessToken.setPath("/");
-        accessToken.setMaxAge(60 * 60);
-
-        Cookie refreshToken = new Cookie("refresh_token", jwt.getRefreshToken());
-        refreshToken.setHttpOnly(true);
-        refreshToken.setPath("/");
-        refreshToken.setMaxAge(60 * 60 * 24 * 30);
-
-        response.addCookie(accessToken);
-        response.addCookie(refreshToken);
-    }
 }
