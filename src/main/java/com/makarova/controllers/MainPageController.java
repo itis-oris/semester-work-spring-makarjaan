@@ -8,7 +8,7 @@ public class MainPageController {
 
     @GetMapping("/main")
     public String getMainPage() {
-        return "profile_page";
+        return "home_page";
     }
 
 }

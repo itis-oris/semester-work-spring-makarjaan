@@ -6,8 +6,6 @@ body {
     padding: 0;
 }
 
-
-
 /* заголовки  */
 .title {
     color: #007568;
@@ -23,31 +21,10 @@ body {
 }
 
 
-
-
-
-
-
-/*  фон для главной страницы */
-.main-page {
-    background-image: url("https://res.cloudinary.com/dqm8yufmb/image/upload/v1734010773/main-background2_ezbqv2.jpg");
-    background-size: cover;
-    background-position: top center;
-    height: 35vh;
-}
-
-.background-container-main {
-    height: 100%;
-    backdrop-filter: blur(4px);
-}
-
-
-
 /*  форма для навигационной модели */
 .navbar {
     background-color: rgba(255, 255, 255, 0.85);
 }
-
 
 
 
@@ -113,8 +90,6 @@ a {
 a:hover {
     color: #75000E;
 }
-
-
 
 
 

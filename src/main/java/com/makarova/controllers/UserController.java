@@ -24,8 +24,6 @@ class UserController {
     @Autowired
     private UserService userService;
 
-
-
     @Loggable
     @GetMapping("/signUp")
     public String getRegistrationPage() {
@@ -55,5 +53,10 @@ class UserController {
             return "sign_up_page";
         }
     }
+
+    @GetMapping("/signIn")
+    public String getAuthPage() { return "sign_in_page"; }
+
+
 
 }
