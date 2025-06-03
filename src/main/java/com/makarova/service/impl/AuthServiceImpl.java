@@ -5,6 +5,7 @@ import com.makarova.dto.JwtResponse;
 import com.makarova.entity.User;
 import com.makarova.filter.JwtAuthentication;
 import com.makarova.filter.JwtProvider;
+import com.makarova.service.AuthService;
 import com.makarova.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
     private final Map<String, String> refreshStorage = new HashMap<>();

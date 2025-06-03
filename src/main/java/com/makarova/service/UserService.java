@@ -11,5 +11,6 @@ import java.util.Optional;
 
 public interface UserService {
     JwtResponse register(UserDto userDto) throws AuthException;
+    void authenticate(String email, String password) throws AuthException;
     Optional<User> getByLogin(@NonNull String login);
 }

@@ -45,6 +45,19 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+
+    @Override
+    public void authenticate(String email, String password) throws AuthException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AuthException("Пользователь не найден"));
+        if (!passwordEncoder.matches(password, user.getHashPassword())) {
+            throw new AuthException("Неверный пароль");
+        }
+        if (user.getState() != User.State.ACTIVE) {
+            throw new AuthException("Пользователь не активен");
+        }
+    }
+
     @Override
     public Optional<User> getByLogin(@NonNull String email) {
         return userRepository.findByEmail(email).stream().findFirst();

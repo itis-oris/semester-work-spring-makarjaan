@@ -11,4 +11,9 @@ public class MainPageController {
         return "home_page";
     }
 
+    @GetMapping("/profile")
+    public String getProfile() {
+        return "profile_page";
+    }
+
 }

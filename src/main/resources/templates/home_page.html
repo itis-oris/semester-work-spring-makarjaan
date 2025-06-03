@@ -8,69 +8,69 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" >
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
 </head>
 <body>
 
-<div th:replace="~{fragments/nav :: navigation(${user})}"></div>
+<div th:replace="fragments/navigation :: navigation"></div>
+    <div class="main-page">
+        <div class="background-container-main">
+            <div class="search-container text-center py-5">
+                <h1 class="text-white text-shadow search-heading">Найдите жильё рядом</h1>
+                <form th:action="@{/apartments}" method="get" class="search-form d-flex justify-content-center gap-2 mt-3">
+                    <input type="text"
+                           id="address"
+                           name="address"
+                           placeholder="Введите адрес, город или регион (например, Татарстан)"
+                           class="form-control w-50"/>
+                    <button type="submit" class="btn btn-primary">Найти</button>
+                </form>
+            </div>
+        </div>
 
-<div class="main-page">
-    <div class="background-container-main">
-        <div class="search-container text-center py-5">
-            <h1 class="text-white text-shadow search-heading">Найдите жильё рядом</h1>
-            <form th:action="@{/apartments}" method="get" class="search-form d-flex justify-content-center gap-2 mt-3">
-                <input type="text"
-                       id="address"
-                       name="address"
-                       placeholder="Введите адрес, город или регион (например, Татарстан)"
-                       class="form-control w-50"/>
-                <button type="submit" class="btn btn-primary">Найти</button>
-            </form>
+        <div class="container py-5">
+            <h2 class="text-center mb-4">Популярные категории</h2>
+            <div class="row g-4">
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="https://p0.zoon.ru/preview/Y67QOqIfvTHDUU5z_ixxrA/2400x1500x75/1/e/b/original_540fb64640c088c9138cb49b_56f29bc260b39.jpg"
+                             class="card-img-top" alt="Квартира">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Квартиры</h5>
+                            <p class="card-text">Идеально подходит для жизни в городе.</p>
+                            <a th:href="@{/apartments(propertyType=Квартира)}" class="custom-btn">Посмотреть</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="https://avatars.mds.yandex.net/i?id=02b137e4c854168859f8082af9bcb8e3_l-10385057-images-thumbs&n=13"
+                             class="card-img-top" alt="Вилла">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Дома</h5>
+                            <p class="card-text">Просторные и роскошные дома для отдыха.</p>
+                            <a th:href="@{/apartments(propertyType=Дом)}" class="custom-btn">Посмотреть</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="https://betonpogreb.ru/wp-content/uploads/e/0/6/e062267a4c9faf5dcc97d307aee6e6f6.jpeg"
+                             class="card-img-top" alt="Студия">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Комнаты</h5>
+                            <p class="card-text">Доступные варианты для студентов и молодых профессионалов.</p>
+                            <a th:href="@{/apartments(propertyType=Комната)}" class="custom-btn">Посмотреть</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-
-    <div class="container py-5">
-        <h2 class="text-center mb-4">Популярные категории</h2>
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://p0.zoon.ru/preview/Y67QOqIfvTHDUU5z_ixxrA/2400x1500x75/1/e/b/original_540fb64640c088c9138cb49b_56f29bc260b39.jpg"
-                         class="card-img-top" alt="Квартира">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Квартиры</h5>
-                        <p class="card-text">Идеально подходит для жизни в городе.</p>
-                        <a th:href="@{/apartments(propertyType=Квартира)}" class="custom-btn">Посмотреть</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://avatars.mds.yandex.net/i?id=02b137e4c854168859f8082af9bcb8e3_l-10385057-images-thumbs&n=13"
-                         class="card-img-top" alt="Вилла">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Дома</h5>
-                        <p class="card-text">Просторные и роскошные дома для отдыха.</p>
-                        <a th:href="@{/apartments(propertyType=Дом)}" class="custom-btn">Посмотреть</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://betonpogreb.ru/wp-content/uploads/e/0/6/e062267a4c9faf5dcc97d307aee6e6f6.jpeg"
-                         class="card-img-top" alt="Студия">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Комнаты</h5>
-                        <p class="card-text">Доступные варианты для студентов и молодых профессионалов.</p>
-                        <a th:href="@{/apartments(propertyType=Комната)}" class="custom-btn">Посмотреть</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
 </div>
-
+<script th:src="@{/js/auth-menu.js}" defer></script>
 </body>

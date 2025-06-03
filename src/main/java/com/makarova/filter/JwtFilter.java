@@ -33,6 +33,9 @@ public class JwtFilter extends GenericFilterBean {
             jwtInfoToken.setAuthenticated(true);
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
         }
+        System.out.println("Authorization Header: " + ((HttpServletRequest) request).getHeader(AUTHORIZATION));
+        System.out.println("Extracted Token: " + token);
+        System.out.println("Is Token Valid: " + (token != null && jwtProvider.validateAccessToken(token)));
         fc.doFilter(request, response);
     }
 
