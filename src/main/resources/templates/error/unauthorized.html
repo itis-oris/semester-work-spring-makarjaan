@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка авторизации</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="container text-center mt-5">
+    <h1 class="text-danger">401 – Неавторизованно</h1>
+    <p th:text="${errorMessage}">Вы не авторизованы для доступа к этой странице.</p>
+    <a th:href="@{/signIn}" class="btn btn-primary mt-3">Войти</a>
+</div>
+</body>
+</html>

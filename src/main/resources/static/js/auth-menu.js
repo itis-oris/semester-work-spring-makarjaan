@@ -1,12 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const nav = document.getElementById("authNav");
     const token = localStorage.getItem("token");
-    console.log("auth-menu.js загружен");
-
-    if (!nav) {
-        console.error("authNav элемент не найден");
-        return;
-    }
 
     if (token) {
         nav.innerHTML = `

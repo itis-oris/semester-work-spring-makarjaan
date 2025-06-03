@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/favicon.ico","/api/auth/**","/signUp", "/signIn", "/main").permitAll()
-                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/profile", "/settings").authenticated()
                         .anyRequest().authenticated()
                 )
                 .build();
