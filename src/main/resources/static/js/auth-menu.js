@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const nav = document.getElementById("authNav");
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
 
     if (token) {
         nav.innerHTML = `

@@ -31,6 +31,10 @@ public class JwtProvider {
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
+    // Добавьте константы для времени жизни токенов
+    private static final long ACCESS_EXPIRATION_MINUTES = 5;
+    private static final long REFRESH_EXPIRATION_DAYS = 30;
+
     public JwtProvider(
             @Value("${jwt.secret.access}") String jwtAccessSecret,
             @Value("${jwt.secret.refresh}") String jwtRefreshSecret) {
@@ -60,6 +64,15 @@ public class JwtProvider {
                 .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
                 .compact();
+    }
+
+    // Добавьте методы для получения времени жизни
+    public long getAccessExpiration() {
+        return ACCESS_EXPIRATION_MINUTES * 60 * 1000; // в миллисекундах
+    }
+
+    public long getRefreshExpiration() {
+        return REFRESH_EXPIRATION_DAYS * 24 * 60 * 60 * 1000; // в миллисекундах
     }
 
     public boolean validateAccessToken(@NonNull String accessToken) {

@@ -6,37 +6,50 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends GenericFilterBean {
+public class JwtFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION = "Authorization";
-
     private final JwtProvider jwtProvider;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc)
-            throws IOException, ServletException {
-        final String token = getTokenFromRequest((HttpServletRequest) request);
-        if (token != null && jwtProvider.validateAccessToken(token)) {
-            final Claims claims = jwtProvider.getAccessClaims(token);
-            final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
-            jwtInfoToken.setAuthenticated(true);
-            SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+
+        try {
+            final String token = getTokenFromRequest(request);
+            if (token != null && jwtProvider.validateAccessToken(token)) {
+                final Claims claims = jwtProvider.getAccessClaims(token);
+                final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
+                jwtInfoToken.setAuthenticated(true);
+                SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
+
+                // Логирование для отладки
+                System.out.println("Authenticated user: " + claims.getSubject());
+            } else {
+                System.out.println("No valid token found");
+            }
+        } catch (Exception e) {
+            logger.error("Authentication error", e);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");
+            return;
         }
-        System.out.println("Authorization Header: " + ((HttpServletRequest) request).getHeader(AUTHORIZATION));
-        System.out.println("Extracted Token: " + token);
-        System.out.println("Is Token Valid: " + (token != null && jwtProvider.validateAccessToken(token)));
-        fc.doFilter(request, response);
+
+        filterChain.doFilter(request, response);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {

@@ -1,11 +1,11 @@
 package com.makarova.controllers;
 
-import com.makarova.dto.JwtRefreshRequest;
-import com.makarova.dto.JwtResponse;
 import com.makarova.dto.JwtRequest;
+import com.makarova.dto.JwtResponse;
 import com.makarova.service.AuthService;
-import com.makarova.service.UserService;
 import jakarta.security.auth.message.AuthException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,21 +18,67 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) throws AuthException {
-        final JwtResponse token = authService.login(authRequest);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<JwtResponse> login(
+            @RequestBody JwtRequest authRequest,
+            HttpServletResponse response) throws AuthException {
+
+        final JwtResponse tokens = authService.login(authRequest);
+
+        // Устанавливаем refreshToken в httpOnly cookie
+        Cookie refreshCookie = new Cookie("refreshToken", tokens.getRefreshToken());
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(false); // Для localhost development
+        refreshCookie.setPath("/"); // ОБЯЗАТЕЛЬНО для всего приложения
+        refreshCookie.setMaxAge(30 * 24 * 60 * 60); // 30 дней
+        response.addCookie(refreshCookie);
+
+        // Логирование для отладки
+        System.out.println("Login successful for: " + authRequest.getEmail());
+        System.out.println("Refresh token set in cookie");
+
+        return ResponseEntity.ok(new JwtResponse(tokens.getAccessToken(), null));
     }
 
     @PostMapping("token")
-    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody JwtRefreshRequest request) throws AuthException {
-        final JwtResponse token = authService.getAccessToken(request.getToken());
+    public ResponseEntity<JwtResponse> getNewAccessToken(
+            @CookieValue(name = "refreshToken", required = false) String refreshToken) throws AuthException {
+
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new AuthException("Refresh token missing");
+        }
+
+        final JwtResponse token = authService.getAccessToken(refreshToken);
+        System.out.println("New access token generated for refresh token");
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("refresh")
-    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody JwtRefreshRequest request) throws AuthException {
-        final JwtResponse token = authService.refresh(request.getToken());
+    public ResponseEntity<JwtResponse> getNewRefreshToken(
+            @CookieValue(name = "refreshToken") String refreshToken) throws AuthException {
+
+        final JwtResponse token = authService.refresh(refreshToken);
+
+        // Можно обновить cookie здесь, если нужно
         return ResponseEntity.ok(token);
     }
+
+    @PostMapping("logout")
+    public ResponseEntity<Void> logout(
+            @CookieValue(name = "refreshToken") String refreshToken,
+            HttpServletResponse response) {
+
+        authService.logout(refreshToken);
+
+        // Удаляем cookie
+        Cookie refreshCookie = new Cookie("refreshToken", null);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(true);
+        refreshCookie.setPath("/api/auth");
+        refreshCookie.setMaxAge(0);
+        response.addCookie(refreshCookie);
+
+        return ResponseEntity.ok().build();
+    }
+
 
 }
