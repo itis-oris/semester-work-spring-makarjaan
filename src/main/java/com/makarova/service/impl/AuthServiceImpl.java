@@ -11,11 +11,11 @@ import com.makarova.service.AuthService;
 import com.makarova.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -31,13 +31,14 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    @Transactional
     @Override
     public JwtResponse login(JwtRequest request) throws AuthException {
         User user = userService.getByLogin(request.getEmail())
-                .orElseThrow(() -> new AuthException("User not found"));
+                .orElseThrow(() -> new AuthException("Пользователь не найден"));
 
         if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getHashPassword())) {
-            throw new AuthException("Invalid password");
+            throw new AuthException("Неправильный пароль");
         }
 
         String accessToken = jwtProvider.generateAccessToken(user);
@@ -49,7 +50,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse getAccessToken(String refreshToken) throws AuthException {
-        // Проверяем валидность refresh token
         if (!jwtProvider.validateRefreshToken(refreshToken)) {
             throw new AuthException("Invalid refresh token");
         }
@@ -76,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponse(newAccessToken, null);
     }
 
-
+    @Transactional
     @Override
     public JwtResponse refresh(String refreshToken) throws AuthException {
         if (!jwtProvider.validateRefreshToken(refreshToken)) {

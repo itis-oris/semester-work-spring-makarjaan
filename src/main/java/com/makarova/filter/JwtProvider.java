@@ -1,7 +1,6 @@
 package com.makarova.filter;
 
 import com.makarova.entity.User;
-import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.NonNull;
@@ -14,9 +13,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
 
 import java.security.Key;
@@ -31,7 +27,6 @@ public class JwtProvider {
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
-    // Добавьте константы для времени жизни токенов
     private static final long ACCESS_EXPIRATION_MINUTES = 5;
     private static final long REFRESH_EXPIRATION_DAYS = 30;
 
@@ -66,13 +61,12 @@ public class JwtProvider {
                 .compact();
     }
 
-    // Добавьте методы для получения времени жизни
     public long getAccessExpiration() {
-        return ACCESS_EXPIRATION_MINUTES * 60 * 1000; // в миллисекундах
+        return ACCESS_EXPIRATION_MINUTES * 60 * 1000;
     }
 
     public long getRefreshExpiration() {
-        return REFRESH_EXPIRATION_DAYS * 24 * 60 * 60 * 1000; // в миллисекундах
+        return REFRESH_EXPIRATION_DAYS * 24 * 60 * 60 * 1000;
     }
 
     public boolean validateAccessToken(@NonNull String accessToken) {

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SettingsController {
 
     @GetMapping("/settings")
-    public String getSettigsPage() {
+    public String getSettingsPage() {
         return "settings_page";
     }
 

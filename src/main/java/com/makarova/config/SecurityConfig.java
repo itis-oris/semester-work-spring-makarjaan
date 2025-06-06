@@ -47,9 +47,9 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:8080"));
                     config.setAllowedMethods(List.of("*"));
-                    config.setAllowedHeaders(List.of("*"));
+                    config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     config.setAllowCredentials(true);
-                    config.setExposedHeaders(List.of("Set-Cookie"));
+                    config.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
                     return config;
                 }))
                 .exceptionHandling(exceptions -> exceptions
@@ -64,7 +64,9 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/signUp",
                                 "/signIn",
-                                "/main"
+                                "/main",
+                                "/api/auth/register",
+                                "/settings"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

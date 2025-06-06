@@ -24,15 +24,13 @@ public class AuthController {
 
         final JwtResponse tokens = authService.login(authRequest);
 
-        // Устанавливаем refreshToken в httpOnly cookie
         Cookie refreshCookie = new Cookie("refreshToken", tokens.getRefreshToken());
         refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(false); // Для localhost development
-        refreshCookie.setPath("/"); // ОБЯЗАТЕЛЬНО для всего приложения
-        refreshCookie.setMaxAge(30 * 24 * 60 * 60); // 30 дней
+        refreshCookie.setSecure(false);
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge(30 * 24 * 60 * 60);
         response.addCookie(refreshCookie);
 
-        // Логирование для отладки
         System.out.println("Login successful for: " + authRequest.getEmail());
         System.out.println("Refresh token set in cookie");
 
@@ -57,8 +55,6 @@ public class AuthController {
             @CookieValue(name = "refreshToken") String refreshToken) throws AuthException {
 
         final JwtResponse token = authService.refresh(refreshToken);
-
-        // Можно обновить cookie здесь, если нужно
         return ResponseEntity.ok(token);
     }
 
@@ -69,16 +65,19 @@ public class AuthController {
 
         authService.logout(refreshToken);
 
-        // Удаляем cookie
         Cookie refreshCookie = new Cookie("refreshToken", null);
         refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(true);
-        refreshCookie.setPath("/api/auth");
+        refreshCookie.setSecure(false);
+        refreshCookie.setPath("/signIn");
         refreshCookie.setMaxAge(0);
         response.addCookie(refreshCookie);
 
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("verify")
+    public ResponseEntity<Void> verifyToken() {
+        return ResponseEntity.ok().build();
+    }
 
 }
