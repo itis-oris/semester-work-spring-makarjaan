@@ -1,26 +1,24 @@
 $(document).ready(function () {
+    // Функция для активации вкладки
+    function activateTab(tabName) {
+        // Скрыть все секции
+        $(".tab-section").addClass("d-none");
+        // Показать выбранную секцию
+        $("#" + tabName).removeClass("d-none");
+
+        // Обновить активные ссылки в меню
+        $("a[data-tab]").removeClass("title");
+        $("a[data-tab='" + tabName + "']").addClass("title");
+    }
+
+    // Обработчик клика по ссылкам меню
     $("a[data-tab]").click(function (e) {
         e.preventDefault();
         var tabName = $(this).data("tab");
-
-        loadTabContent(tabName);
-
-        $(".tab-section").addClass("d-none");
-        $("#" + tabName).removeClass("d-none");
-
-        $("a[data-tab]").removeClass("title");
-        $(this).addClass("title");
+        activateTab(tabName);
     });
 
-
-    function loadTabContent(tabName) {
-        $.get('/settings', { activeTab: tabName }, function(response) {
-            $('#tabContent').html(response);
-        });
-    }
-
-
+    // Активировать начальную вкладку при загрузке страницы
     var initialTab = 'advertisement';
-    loadTabContent(initialTab);
-    $("#" + initialTab).removeClass("d-none");
+    activateTab(initialTab);
 });

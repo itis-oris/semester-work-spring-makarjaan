@@ -1,0 +1,13 @@
+.title {
+    color: #0d6efd !important;
+    font-weight: bold;
+}
+
+.nav a {
+    color: #1a1d20;
+    text-decoration: none;
+}
+
+.nav a:hover {
+    color: #0d6efd;
+}

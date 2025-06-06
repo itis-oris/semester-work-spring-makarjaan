@@ -66,6 +66,8 @@ public class SecurityConfig {
                                 "/signIn",
                                 "/main",
                                 "/api/auth/register",
+                                "/api/**",
+                                "/addadvert",
                                 "/settings"
                         ).permitAll()
                         .anyRequest().authenticated()
