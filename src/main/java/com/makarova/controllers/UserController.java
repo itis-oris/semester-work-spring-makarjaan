@@ -34,36 +34,18 @@ class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private AuthService authService;
-
     @Loggable
     @GetMapping("/signUp")
     public String getRegistrationPage() {
         return "sign_up_page";
     }
 
+
     @PostMapping("/signUp")
-    public String handleRegistration(
-            @Valid @ModelAttribute("user") UserDto user,
-            BindingResult result,
-            Model model) {
-
-        if (result.hasErrors()) {
-            String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
-            model.addAttribute("errorMessage", errorMessage);
-            return "sign_up_page";
-        }
-
-        try {
-            userService.register(user);
-            return "redirect:/signIn";
-
-        } catch (Exception e) {
-            model.addAttribute("user", user);
-            model.addAttribute("errorMessage", e.getMessage());
-            return "sign_up_page";
-        }
+    @ResponseBody
+    public void handleRegistration(
+            @Valid @RequestBody UserDto user) throws AuthException {
+        userService.register(user);
     }
 
 

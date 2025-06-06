@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
@@ -34,6 +35,16 @@ public class User {
 
     @Column
     private String phone;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @Column
+    private String profilePhotoUrl;
+
+    @Column
+    private String messengers;
+
 
     @Enumerated(value = EnumType.STRING)
     private State state;

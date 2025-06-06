@@ -19,17 +19,21 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
+
 
     @Override
-    public JwtResponse register(UserDto request) throws AuthException {
+    public void register(UserDto request) throws AuthException {
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Пользователь с таким email уже существует");
+            throw new AuthException("Пользователь с таким email уже существует");
         }
 
         User newUser = User.builder()
@@ -42,21 +46,8 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(newUser);
-        return null;
     }
 
-
-    @Override
-    public void authenticate(String email, String password) throws AuthException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AuthException("Пользователь не найден"));
-        if (!passwordEncoder.matches(password, user.getHashPassword())) {
-            throw new AuthException("Неверный пароль");
-        }
-        if (user.getState() != User.State.ACTIVE) {
-            throw new AuthException("Пользователь не активен");
-        }
-    }
 
     @Override
     public Optional<User> getByLogin(@NonNull String email) {

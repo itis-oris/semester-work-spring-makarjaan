@@ -34,4 +34,8 @@ public class UserDto {
     @NotBlank(message = "Пароль не может быть пустым")
     @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
     private String password;
+
+    private String profilePhotoUrl;
+
+    private String messengers;
 }

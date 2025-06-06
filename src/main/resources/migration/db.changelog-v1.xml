@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="1" author="arina">
-        <createTable tableName="user" schemaName="public">
+        <createTable tableName="account" schemaName="public">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -14,7 +14,7 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="password" type="VARCHAR(100)">
+            <column name="hash_password" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
 
@@ -25,8 +25,20 @@
             <column name="phone" type="VARCHAR(20)">
                 <constraints nullable="true"/>
             </column>
+
+            <column name="state" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
+        <createTable tableName="user_role" schemaName="public">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_user_role_user" references="account(id)"/>
+            </column>
+            <column name="role" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>
