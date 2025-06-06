@@ -31,6 +31,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    implementation("com.cloudinary:cloudinary-core:1.36.0")
+    implementation("com.cloudinary:cloudinary-http44:1.36.0")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")

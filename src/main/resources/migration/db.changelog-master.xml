@@ -8,4 +8,6 @@
 
     <include file="/migration/db.changelog-v2.xml"/>
 
+    <include file="migration/db.changelog-v3.xml"/>
+
 </databaseChangeLog>
