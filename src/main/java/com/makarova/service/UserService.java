@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface UserService {
     void register(UserDto userDto) throws AuthException;
+    UserDto findByEmail(String email);
     Optional<User> getByLogin(@NonNull String login);
 }

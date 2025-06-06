@@ -1,5 +1,6 @@
 package com.makarova.dto;
 
+import com.makarova.entity.Role;
 import com.makarova.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import lombok.*;
 import jakarta.validation.constraints.*;
+
+import java.util.Collections;
 
 @Data
 @NoArgsConstructor
@@ -38,4 +41,15 @@ public class UserDto {
     private String profilePhotoUrl;
 
     private String messengers;
+
+    public static UserDto from(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .messengers(user.getMessengers())
+                .profilePhotoUrl(user.getProfilePhotoUrl())
+                .build();
+    }
 }

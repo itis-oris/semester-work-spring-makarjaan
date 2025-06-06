@@ -1,32 +1,17 @@
 package com.makarova.controllers;
 
 import com.makarova.aspect.Loggable;
-import com.makarova.dto.JwtRequest;
-import com.makarova.dto.JwtResponse;
 import com.makarova.dto.UserDto;
-import com.makarova.service.AuthService;
 import com.makarova.service.UserService;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 
 @Controller
 class UserController {
@@ -44,8 +29,8 @@ class UserController {
     @PostMapping("/signUp")
     @ResponseBody
     public void handleRegistration(
-            @Valid @RequestBody UserDto user) throws AuthException {
-        userService.register(user);
+            @Valid @RequestBody UserDto userDto) throws AuthException {
+        userService.register(userDto);
     }
 
 
