@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     const nav = document.getElementById("authNav");
-    const token = localStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("accessToken");
 
     if (token) {
+        sessionStorage.setItem("accessToken", token);
         nav.innerHTML = `
             <li class="nav-item dropdown d-flex align-items-center">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" id="profileDropdown"
@@ -14,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <ul class="dropdown-menu text-small" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="/settings">Настройки</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" onclick="logout()">Выйти</a></li>
+                   <li><a href="#" class="dropdown-item" id="logoutLink">Выйти</a></li>
                 </ul>
             </li>
         `;
@@ -27,7 +28,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-function logout() {
-    localStorage.removeItem("token");
-    window.location.reload();
-}
+document.addEventListener("DOMContentLoaded", function() {
+    const logoutLink = document.getElementById("logoutLink");
+    if (logoutLink) {
+        logoutLink.addEventListener("click", async function(event) {
+            event.preventDefault();
+
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    sessionStorage.removeItem('accessToken');
+                    window.location.href = '/main';
+                } else {
+                    console.error('Logout failed');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+    }
+});
+
