@@ -3,9 +3,11 @@ package com.makarova.utils;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,19 +22,31 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
+//        Map<String, String> error = new HashMap<>();
+//        String errorMessage = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
+//        error.put("message", errorMessage);
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+//    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, String> error = new HashMap<>();
-        String errorMessage = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
-        error.put("message", errorMessage);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    public ResponseEntity<Map<String, Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return ResponseEntity.badRequest().body(Map.of("errors", errors));
     }
 
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleGeneric(Exception ex) {
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<Map<String, String>> handleFileSizeLimitExceeded() {
         Map<String, String> error = new HashMap<>();
-        error.put("message", "Произошла ошибка: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        error.put("message", "Файл слишком большой");
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(error);
     }
 }
