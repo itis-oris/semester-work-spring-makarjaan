@@ -25,7 +25,7 @@ function init() {
                 result.options.set('preset', 'islands#darkBlueDotIconWithCaption');
                 result.properties.set('iconCaption', result.getAddressLine());
 
-                document.getElementById('selectedAddress').value = result.getAddressLine();
+                document.getElementById('address').value = result.getAddressLine();
             } else {
                 alert('Пожалуйста, выберите точный адрес с домом.');
             }
@@ -36,6 +36,6 @@ function init() {
 
     searchControl.events.add('searchstart', function () {
         myMap.geoObjects.removeAll();
-        document.getElementById('selectedAddress').value = 'Не выбран';
+        document.getElementById('address').value = 'Не выбран';
     });
 }

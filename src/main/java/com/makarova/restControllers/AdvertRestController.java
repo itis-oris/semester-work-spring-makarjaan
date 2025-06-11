@@ -22,7 +22,6 @@ public class AdvertRestController {
 
     private final ApartmentService apartmentService;
 
-
     @PostMapping("/add")
     public ResponseEntity<?> createAdvert(
             @Valid @ModelAttribute ApartmentDto apartmentDto,
@@ -30,8 +29,13 @@ public class AdvertRestController {
             Principal principal) {
 
         try {
-            String userEmail = "hui@ru";
 
+            if (images == null || images.length == 0 || images[0].isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("errors", Map.of("mainPhotoUrl", "Добавьте хотя бы одну фотографию")));
+            }
+
+            String userEmail = "hui@ru";
             apartmentService.saveAdvert(userEmail, apartmentDto, images);
             return ResponseEntity.ok().body(Map.of("message", "Объявление успешно добавлено"));
         } catch (Exception e) {
