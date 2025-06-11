@@ -1,19 +1,17 @@
 package com.makarova.restControllers;
 
 import com.makarova.dto.ApartmentDto;
-import com.makarova.dto.UserDto;
 import com.makarova.service.ApartmentService;
 import com.makarova.service.PhotoService;
 import com.makarova.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,26 +27,30 @@ public class AdvertRestController {
     @PostMapping("/add")
     public ResponseEntity<?> createAdvert(
             @Valid @ModelAttribute ApartmentDto apartmentDto,
-            BindingResult bindingResult,
-            @RequestParam("images") MultipartFile[] images,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
             Principal principal) {
 
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errors.put(error.getField(), error.getDefaultMessage());
-            }
-            return ResponseEntity.badRequest().body(Map.of("errors", errors));
-        }
-
         try {
-            String userEmail = principal.getName();
-            UserDto user = userService.findByEmail(userEmail);
+            Map<String, String> errors = new HashMap<>();
 
-            apartmentService.saveAdvert(user, apartmentDto, images);
+            if (images == null || images.length == 0 ||
+                    Arrays.stream(images).allMatch(MultipartFile::isEmpty)) {
+                errors.put("images", "Добавьте хотя бы одну фотографию");
+            }
+
+
+            if (!errors.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("errors", errors));
+            }
+
+            String userEmail = "hui@ru";
+
+            apartmentService.saveAdvert(userEmail, apartmentDto, images);
             return ResponseEntity.ok().body(Map.of("message", "Объявление успешно добавлено"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Произошла ошибка при добавлении объявления"));
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("message", "Произошла ошибка при добавлении объявления: " + e.getMessage()));
         }
     }
 }
+

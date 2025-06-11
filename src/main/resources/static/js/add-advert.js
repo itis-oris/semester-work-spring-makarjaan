@@ -1,99 +1,83 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const addAdvertButton = document.querySelector('.add-advert-btn');
-    if (addAdvertButton) {
-        addAdvertButton.style.display = 'none';
-    }
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("advertForm");
+    const dealTypeBtns = document.querySelectorAll(".deal-type-btn");
+    const previewContainer = document.getElementById("preview");
+    const imageInput = document.getElementById("images");
 
-    const rentLink = document.querySelector('a[data-deal-type="rent"]');
-    const saleLink = document.querySelector('a[data-deal-type="sale"]');
+    dealTypeBtns.forEach(button => {
+        button.addEventListener("click", () => {
+            dealTypeBtns.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
 
-    if (rentLink && saleLink) {
-        rentLink.addEventListener('click', function (e) {
-            e.preventDefault();
-            switchDealType('rent');
+            const dealType = button.getAttribute("data-deal-type");
+            document.getElementById("dealType").value = dealType;
+
+            const isRent = dealType === "rent";
+            document.getElementById("rentFields").classList.toggle("d-none", !isRent);
+            document.getElementById("saleFields").classList.toggle("d-none", isRent);
         });
+    });
 
-        saleLink.addEventListener('click', function (e) {
-            e.preventDefault();
-            switchDealType('sale');
-        });
-    }
-
-    function switchDealType(type) {
-        rentLink.classList.toggle('rounded-custom-btn', type === 'rent');
-        saleLink.classList.toggle('rounded-custom-btn', type === 'sale');
-
-        const rentFields = document.getElementById('rentFields');
-        const saleFields = document.getElementById('saleFields');
-
-        if (type === 'rent') {
-            rentFields.classList.remove('d-none');
-            saleFields.classList.add('d-none');
-        } else {
-            rentFields.classList.add('d-none');
-            saleFields.classList.remove('d-none');
-        }
-    }
-
-    const form = document.getElementById('advertForm');
-    form.addEventListener('submit', async function (e) {
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        const formData = new FormData(form);
-        const advertData = {};
-
-        for (const [key, value] of formData.entries()) {
-            advertData[key] = value;
-        }
+        clearErrors();
 
         try {
-            const response = await fetch('/api/adverts/add', {
-                method: 'POST',
-                body: formData,
+            const response = await fetch("/api/adverts/add", {
+                method: "POST",
+                body: new FormData(form)
             });
 
-            const data = await response.json();
+            const result = await response.json();
 
-            if (!response.ok) {
-                clearErrors();
-
-                if (data.errors) {
-                    Object.keys(data.errors).forEach(field => {
-                        const element = document.getElementById(field);
-                        if (element) {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.className = 'invalid-feedback d-block';
-                            errorDiv.textContent = data.errors[field];
-                            element.parentNode.appendChild(errorDiv);
-                            element.classList.add('is-invalid');
-                        }
-                    });
-                } else if (data.message) {
-                    showError(data.message);
-                }
-
-                throw new Error(data.message || 'Ошибка при добавлении объявления');
+            if (response.ok) {
+                window.location.href = '/settings';
+            } else if (result.errors) {
+                showValidationErrors(result.errors);
+            } else {
+                alert(result.message || "Произошла ошибка при добавлении объявления");
             }
-
-            window.location.href = '/settings';
-
-        } catch (error) {
-            console.error('Ошибка:', error);
-            showError(error.message || 'Произошла ошибка при добавлении объявления');
+        } catch {
+            alert("Произошла ошибка при отправке данных");
         }
     });
 
-    function clearErrors() {
-        document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
-        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-        document.querySelectorAll('.alert').forEach(el => el.remove());
+    imageInput.addEventListener("change", () => {
+        previewContainer.innerHTML = "";
+
+        Array.from(imageInput.files)
+            .filter(file => file.type.startsWith("image/"))
+            .forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewContainer.insertAdjacentHTML('beforeend', `
+                        <div class="col-md-3">
+                            <div class="preview-item">
+                                <img src="${e.target.result}" class="preview-image" alt="Превью">
+                            </div>
+                        </div>
+                    `);
+                };
+                reader.readAsDataURL(file);
+            });
+    });
+
+    function showValidationErrors(errors) {
+        Object.entries(errors).forEach(([field, error]) => {
+            const errorDiv = document.getElementById(`${field}Error`);
+            const input = document.getElementById(field);
+
+            if (errorDiv) {
+                errorDiv.textContent = error;
+            }
+            if (input) {
+                input.classList.add("is-invalid");
+            }
+        });
     }
 
-    function showError(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'alert alert-danger';
-        errorDiv.textContent = message;
-        const form = document.getElementById('advertForm');
-        form.insertBefore(errorDiv, form.firstChild);
+    function clearErrors() {
+        document.querySelectorAll(".invalid-feedback").forEach(div => div.textContent = "");
+        document.querySelectorAll(".is-invalid").forEach(input => input.classList.remove("is-invalid"));
     }
 });

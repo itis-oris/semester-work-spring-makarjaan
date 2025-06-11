@@ -1,4 +1,4 @@
-package com.makarova.utils;
+package com.makarova.exception;
 
 import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,8 @@ public class RestExceptionHandler {
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Map<String, String>>> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
         ex.getBindingResult().getAllErrors().forEach(error -> {

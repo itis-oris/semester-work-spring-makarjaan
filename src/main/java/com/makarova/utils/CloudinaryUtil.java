@@ -16,8 +16,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CloudinaryUtil {
 
+    private final Cloudinary cloudinary;
+
     @Autowired
-    private Cloudinary cloudinary;
+    public CloudinaryUtil(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
+    }
 
     public String upload(File file, String filename) throws IOException {
         Map<String, Object> uploadParams = Map.of("public_id", filename);
@@ -27,7 +31,6 @@ public class CloudinaryUtil {
 
     public File makeFile(Part part, String filename) throws IOException {
         File tempFile = File.createTempFile("profile_", filename);
-
         try (InputStream content = part.getInputStream();
              OutputStream out = Files.newOutputStream(tempFile.toPath())) {
             byte[] buffer = new byte[1024];
@@ -40,5 +43,4 @@ public class CloudinaryUtil {
         }
         return tempFile;
     }
-
 }

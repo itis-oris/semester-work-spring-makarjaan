@@ -11,5 +11,5 @@ public interface ApartmentService {
 
     List<ApartmentDto> getByUserIdAndDealType(Long userId, String dealType);
 
-    void saveAdvert(UserDto userDto, ApartmentDto apartmentDto, MultipartFile[] file);
+    void saveAdvert(String userEmail, ApartmentDto apartmentDto, MultipartFile[] file);
 }

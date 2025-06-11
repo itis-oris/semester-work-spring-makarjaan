@@ -1,9 +1,12 @@
 package com.makarova.dto;
 
 import com.makarova.entity.Apartment;
+import com.makarova.exception.ValidAddress;
+import com.makarova.exception.ValidApartmentDto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+@ValidApartmentDto
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +31,7 @@ public class ApartmentDto {
     @DecimalMin(value = "0.01", message = "Площадь должна быть больше 0")
     private Double area;
 
-    @NotBlank(message = "Адрес не может быть пустым")
+    @ValidAddress
     private String address;
 
     @NotBlank(message = "Тип сделки не может быть пустым")

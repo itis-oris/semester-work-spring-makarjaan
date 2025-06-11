@@ -1,21 +1,17 @@
 ymaps.ready(init);
 
 function init() {
-    // Создаем карту
     var myMap = new ymaps.Map('map', {
         center: [55.753994, 37.622093],
         zoom: 9,
         controls: ['searchControl']
     });
 
-    // получаем ссылку на контроль поиска
     var searchControl = myMap.controls.get('searchControl');
 
-    // слушаем событие выбора результата поиска
     searchControl.events.add('resultselect', function (e) {
         var index = e.get('index');
 
-        // получаем данные выбранного результата
         searchControl.getResult(index).then(function (result) {
             var geoObjectType = result.properties.get('metaDataProperty').GeocoderMetaData.kind;
 
@@ -38,7 +34,6 @@ function init() {
         });
     });
 
-    // Очищаем предыдущий выбор при новом поиске
     searchControl.events.add('searchstart', function () {
         myMap.geoObjects.removeAll();
         document.getElementById('selectedAddress').value = 'Не выбран';
