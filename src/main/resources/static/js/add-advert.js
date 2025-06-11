@@ -65,7 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function showValidationErrors(errors) {
         Object.entries(errors).forEach(([field, error]) => {
             const errorDiv = document.getElementById(`${field}Error`);
-            const input = document.getElementById(field);
+            let input = document.getElementById(field);
+
+            if (field === "address") {
+                input = document.getElementById("address");
+            }
 
             if (errorDiv) {
                 errorDiv.textContent = error;
@@ -73,11 +77,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (input) {
                 input.classList.add("is-invalid");
             }
+
+            if (field === "images") {
+                document.querySelector(".upload-zone").classList.add("border", "border-danger");
+            }
         });
     }
 
     function clearErrors() {
         document.querySelectorAll(".invalid-feedback").forEach(div => div.textContent = "");
         document.querySelectorAll(".is-invalid").forEach(input => input.classList.remove("is-invalid"));
+        document.querySelector(".upload-zone")?.classList.remove("border", "border-danger");
     }
 });

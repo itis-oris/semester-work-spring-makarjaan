@@ -75,6 +75,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
                     ApartmentPhoto photo = ApartmentPhoto.builder()
                             .apartment(apartment)
+                            .createdAt(LocalDateTime.now())
                             .photoUrl(photoUrl)
                             .typeOfAdvert(apartment.getDealType())
                             .build();
