@@ -1,0 +1,7 @@
+<changeSet id="2025-06-11-1-add-main-photo-url-to-apartment" author="yourname">
+    <addColumn tableName="apartment">
+        <column name="main_photo_url" type="varchar(255)">
+            <constraints nullable="true"/>
+        </column>
+    </addColumn>
+</changeSet>

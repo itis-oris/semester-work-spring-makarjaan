@@ -64,6 +64,7 @@ public class ApartmentDto {
                 .priceRent(apartment.getPriceRent())
                 .typeOfRent(apartment.getTypeOfRent())
                 .status(apartment.getStatus())
+                .mainPhotoUrl(apartment.getMainPhotoUrl())
                 .build();
     }
 }

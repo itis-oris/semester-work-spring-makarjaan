@@ -56,6 +56,8 @@ public class Apartment {
     @Column(nullable = false)
     private Boolean isFavorite;
 
+    private String mainPhotoUrl;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

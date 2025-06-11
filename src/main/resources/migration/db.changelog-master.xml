@@ -10,4 +10,8 @@
 
     <include file="migration/db.changelog-v3.xml"/>
 
+    <include file="migration/db.changelog-v4.xml"/>
+
+    <include file="migration/db.changelog-v5.xml"/>
+
 </databaseChangeLog>

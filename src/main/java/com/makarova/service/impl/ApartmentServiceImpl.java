@@ -1,7 +1,6 @@
 package com.makarova.service.impl;
 
 import com.makarova.dto.ApartmentDto;
-import com.makarova.dto.UserDto;
 import com.makarova.entity.Apartment;
 import com.makarova.entity.ApartmentPhoto;
 import com.makarova.entity.User;
@@ -63,6 +62,8 @@ public class ApartmentServiceImpl implements ApartmentService {
 
         apartment = apartmentRepository.save(apartment);
 
+        boolean mainPhotoSet = false;
+
         for (MultipartFile image : images) {
             if (!image.isEmpty()) {
                 try {
@@ -81,6 +82,13 @@ public class ApartmentServiceImpl implements ApartmentService {
                             .build();
 
                     apartmentPhotoRepository.save(photo);
+
+                    if (!mainPhotoSet) {
+                        apartment.setMainPhotoUrl(photoUrl);
+                        apartmentRepository.save(apartment);
+                        mainPhotoSet = true;
+                    }
+
                 } catch (IOException e) {
                     throw new RuntimeException("Ошибка при обработке фото: " + image.getOriginalFilename(), e);
                 }
