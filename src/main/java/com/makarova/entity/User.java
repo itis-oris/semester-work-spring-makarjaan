@@ -33,10 +33,10 @@ public class User {
     @Column
     private String hashPassword;
 
-    @Column
+    @Column(nullable = false)
     private String phone;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
     private LocalDateTime createdAt;
 
     @Column

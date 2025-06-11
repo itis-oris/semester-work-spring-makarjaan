@@ -36,6 +36,7 @@ public class UserDto {
 
     @NotBlank(message = "Пароль не может быть пустым")
     @Size(min = 6, message = "Пароль должен содержать минимум 6 символов")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9]).*$", message = "Пароль должен содержать минимум одну заглавную букву и одну цифру")
     private String password;
 
     private String profilePhotoUrl;

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
                 .hashPassword(passwordEncoder.encode(userDto.getPassword()))
                 .roles(Collections.singleton(Role.USER))
                 .state(User.State.ACTIVE)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         userRepository.save(newUser);

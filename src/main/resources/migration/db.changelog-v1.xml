@@ -17,7 +17,11 @@
         </column>
 
         <column name="phone" type="VARCHAR(20)">
-            <constraints nullable="true"/>
+            <constraints nullable="false"/>
+        </column>
+
+        <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <constraints nullable="false"/>
         </column>
 
         <column name="state" type="VARCHAR(20)">

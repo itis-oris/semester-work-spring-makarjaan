@@ -1,5 +1,6 @@
 document.getElementById('registrationForm').addEventListener('submit', async function (e) {
     e.preventDefault();
+    clearErrors();
 
     const form = e.target;
     const formData = new FormData(form);
@@ -23,8 +24,6 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
         const data = await response.json();
 
         if (!response.ok) {
-            clearErrors();
-
             if (data.errors) {
                 Object.keys(data.errors).forEach(field => {
                     const message = data.errors[field];
@@ -39,13 +38,9 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
                         element.parentNode.appendChild(errorDiv);
                     }
                 });
-            } else if (data.message) {
-                const errorMessage = document.getElementById('error-message');
-                const errorText = document.getElementById('error-text');
-                errorText.textContent = data.message;
-                errorMessage.classList.remove('d-none');
+            } else {
+                showError(data.message || 'Произошла ошибка при регистрации');
             }
-
             return;
         }
 
@@ -53,10 +48,7 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
 
     } catch (error) {
         console.error('Ошибка:', error);
-        const errorMessage = document.getElementById('error-message');
-        const errorText = document.getElementById('error-text');
-        errorText.textContent = 'Не удалось отправить форму. Проверьте соединение.';
-        errorMessage.classList.remove('d-none');
+        showError('Не удалось отправить форму. Проверьте соединение.');
     }
 });
 
@@ -66,3 +58,27 @@ function clearErrors() {
     const errorMessage = document.getElementById('error-message');
     if (errorMessage) errorMessage.classList.add('d-none');
 }
+
+function showError(message) {
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+    if (errorMessage && errorText) {
+        errorText.textContent = message;
+        errorMessage.classList.remove('d-none');
+    }
+}
+
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordInput = document.getElementById('password');
+    const icon = this.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+});
