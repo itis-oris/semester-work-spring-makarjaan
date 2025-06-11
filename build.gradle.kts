@@ -36,6 +36,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.1.1.RELEASE")
+
 
     implementation("jakarta.servlet:jakarta.servlet-api:$jakartaVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")

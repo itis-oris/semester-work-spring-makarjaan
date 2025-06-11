@@ -95,4 +95,15 @@ public class ApartmentServiceImpl implements ApartmentService {
             }
         }
     }
+
+
+    @Override
+    public ApartmentDto getApartmentInfo(Long apartmentId) {
+        Apartment apartment = apartmentRepository.findById(apartmentId)
+                .orElseThrow(() -> new RuntimeException("Apartment not found"));
+
+        return ApartmentDto.from(apartment);
+    }
+
+
 }

@@ -68,8 +68,10 @@ public class SecurityConfig {
                                 "/api/auth/register",
                                 "/api/**",
                                 "/addadvert",
-                                "/settings"
+                                "/settings",
+                                "/details"
                         ).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();

@@ -61,4 +61,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getByLogin(@NonNull String email) {
         return userRepository.findByEmail(email).stream().findFirst();
     }
+
+    @Override
+    public String getUserPhone(Long userId) {
+        return "";
+    }
+
+    @Override
+    public String getUserMes(Long userId) {
+        return "";
+    }
 }
