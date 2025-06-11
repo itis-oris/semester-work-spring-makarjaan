@@ -64,22 +64,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showValidationErrors(errors) {
         Object.entries(errors).forEach(([field, error]) => {
-            const errorDiv = document.getElementById(`${field}Error`);
+            let errorDiv = document.getElementById(`${field}Error`);
             let input = document.getElementById(field);
 
-            if (field === "address") {
-                input = document.getElementById("address");
+            switch (field) {
+                case "mainPhotoUrl":
+                    errorDiv = document.getElementById("imagesError");
+                    document.querySelector(".upload-zone")?.classList.add("border", "border-danger");
+                    break;
             }
 
             if (errorDiv) {
                 errorDiv.textContent = error;
             }
+
             if (input) {
                 input.classList.add("is-invalid");
-            }
-
-            if (field === "images") {
-                document.querySelector(".upload-zone").classList.add("border", "border-danger");
             }
         });
     }

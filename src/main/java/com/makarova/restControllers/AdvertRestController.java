@@ -21,8 +21,7 @@ import java.util.Map;
 public class AdvertRestController {
 
     private final ApartmentService apartmentService;
-    private final PhotoService photoService;
-    private final UserService userService;
+
 
     @PostMapping("/add")
     public ResponseEntity<?> createAdvert(
@@ -31,18 +30,6 @@ public class AdvertRestController {
             Principal principal) {
 
         try {
-            Map<String, String> errors = new HashMap<>();
-
-            if (images == null || images.length == 0 ||
-                    Arrays.stream(images).allMatch(MultipartFile::isEmpty)) {
-                errors.put("images", "Добавьте хотя бы одну фотографию");
-            }
-
-
-            if (!errors.isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("errors", errors));
-            }
-
             String userEmail = "hui@ru";
 
             apartmentService.saveAdvert(userEmail, apartmentDto, images);

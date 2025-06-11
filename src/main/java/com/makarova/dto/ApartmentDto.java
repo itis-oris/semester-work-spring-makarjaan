@@ -48,6 +48,7 @@ public class ApartmentDto {
 
     private Boolean isFavorite;
 
+    @NotBlank(message = "Добавьте хотя бы одну фотографию")
     private String mainPhotoUrl;
 
     public static ApartmentDto from(Apartment apartment) {
