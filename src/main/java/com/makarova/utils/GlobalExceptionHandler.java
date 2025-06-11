@@ -22,13 +22,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
-//        Map<String, String> error = new HashMap<>();
-//        String errorMessage = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
-//        error.put("message", errorMessage);
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {

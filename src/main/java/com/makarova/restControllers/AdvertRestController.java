@@ -1,4 +1,4 @@
-package com.makarova.controllers;
+package com.makarova.restControllers;
 
 import com.makarova.dto.ApartmentDto;
 import com.makarova.dto.UserDto;
@@ -13,7 +13,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;

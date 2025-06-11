@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const addAdvertButton = document.querySelector('.add-advert-btn');
     if (addAdvertButton) {
         addAdvertButton.style.display = 'none';
@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const saleLink = document.querySelector('a[data-deal-type="sale"]');
 
     if (rentLink && saleLink) {
-        rentLink.addEventListener('click', function(e) {
+        rentLink.addEventListener('click', function (e) {
             e.preventDefault();
             switchDealType('rent');
         });
 
-        saleLink.addEventListener('click', function(e) {
+        saleLink.addEventListener('click', function (e) {
             e.preventDefault();
             switchDealType('sale');
         });
@@ -36,25 +36,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const form = document.getElementById('advertForm');
-    form.addEventListener('submit', async function(e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const formData = new FormData(form);
+        const advertData = {};
+
+        for (const [key, value] of formData.entries()) {
+            advertData[key] = value;
+        }
 
         try {
             const response = await fetch('/api/adverts/add', {
                 method: 'POST',
-                body: formData
+                body: formData,
             });
 
             const data = await response.json();
 
-            if (response.ok) {
-                window.location.href = '/settings';
-            } else {
-                if (data.errors) {
-                    clearErrors();
+            if (!response.ok) {
+                clearErrors();
 
+                if (data.errors) {
                     Object.keys(data.errors).forEach(field => {
                         const element = document.getElementById(field);
                         if (element) {
@@ -68,9 +71,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (data.message) {
                     showError(data.message);
                 }
+
+                throw new Error(data.message || 'Ошибка при добавлении объявления');
             }
+
+            window.location.href = '/settings';
+
         } catch (error) {
-            showError('Произошла ошибка при добавлении объявления');
+            console.error('Ошибка:', error);
+            showError(error.message || 'Произошла ошибка при добавлении объявления');
         }
     });
 
@@ -84,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'alert alert-danger';
         errorDiv.textContent = message;
+        const form = document.getElementById('advertForm');
         form.insertBefore(errorDiv, form.firstChild);
     }
 });
