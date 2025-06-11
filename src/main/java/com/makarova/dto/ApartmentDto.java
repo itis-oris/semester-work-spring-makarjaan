@@ -1,8 +1,11 @@
 package com.makarova.dto;
 
 import com.makarova.entity.Apartment;
+import com.makarova.entity.ApartmentStatus;
 import com.makarova.exception.ValidAddress;
 import com.makarova.exception.ValidApartmentDto;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -43,8 +46,7 @@ public class ApartmentDto {
 
     private String typeOfRent;
 
-    @NotBlank(message = "Статус не может быть пустым")
-    private String status;
+    private ApartmentStatus status;
 
     private Boolean isFavorite;
 

@@ -48,7 +48,8 @@
                     </div>
 
                     <div id="saleFields" class="d-none">
-                        <input type="hidden" id="status" name="status" value="FOR_SALE" />
+                        <input type="hidden" name="status" th:value="${T(com.makarova.entity.ApartmentStatus).SENT_FOR_VERIFICATION.name()}">
+
                         <div class="mb-3">
                             <label class="form-label">Цена продажи</label>
                             <div class="input-group">

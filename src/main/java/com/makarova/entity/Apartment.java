@@ -38,8 +38,8 @@ public class Apartment {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ApartmentStatus status;
 
     @Column(nullable = false)
     private String address;

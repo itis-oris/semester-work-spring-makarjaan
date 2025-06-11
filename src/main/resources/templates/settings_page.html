@@ -91,7 +91,7 @@
                                                         <form method="post" onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
                                                             <input type="hidden" name="dealType" value="sale">
                                                             <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
-                                                            <input type="hidden" name="status" value="Снято с публикации">
+                                                            <input type="hidden" name="status" value=COMPLETED>
                                                             <button class="dropdown-item text-warning" type="submit">Снять с публикации</button>
                                                         </form>
                                                         <li>
@@ -103,10 +103,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <span th:if="${apartment.status == 'Отправлено на проверку'}" class="text-info me-3" th:text="${apartment.status}">Статус</span>
-                                                <span th:if="${apartment.status == 'Отказано в публикации'}" class="text-danger me-3" th:text="${apartment.status}">Статус</span>
-                                                <span th:if="${apartment.status == 'Опубликовано'}" class="text-success me-3" th:text="${apartment.status}">Статус</span>
-                                                <span th:if="${apartment.status == 'Снято с публикации'}" class="text-dark me-3" th:text="${apartment.status}">Статус</span>
+                                                <span th:text="${apartment.status.displayName}">Статус</span>
                                             </div>
                                         </div>
                                     </div>
@@ -142,7 +139,7 @@
                                                         <form method="post" onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
                                                             <input type="hidden" name="dealType" value="rent">
                                                             <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
-                                                            <input type="hidden" name="status" value="Снято с публикации">
+                                                            <input type="hidden" name="status" th:value="${T(com.makarova.entity.ApartmentStatus).COMPLETED.name()}">
                                                             <button class="dropdown-item text-warning" type="submit">Снять с публикации</button>
                                                         </form>
                                                         <li>
@@ -154,9 +151,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <span th:if="${apartment.status == 'Отправлено на проверку'}" class="text-info me-3" th:text="${apartment.status}">Статус</span>
-                                                <span th:if="${apartment.status == 'Отказано в публикации'}" class="text-danger me-3" th:text="${apartment.status}">Статус</span>
-                                                <span th:if="${apartment.status == 'Опубликовано'}" class="text-success me-3" th:text="${apartment.status}">Статус</span>
+                                                <span th:text="${apartment.status.displayName}">Статус</span>
                                             </div>
                                         </div>
                                     </div>
