@@ -9,13 +9,10 @@ import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -50,17 +47,7 @@ public class UserRestController {
 
     @PostMapping("/signUp")
     public ResponseEntity<?> handleRegistration(
-            @Valid @RequestBody UserDto userDto,
-            BindingResult bindingResult) throws AuthException {
-
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            bindingResult.getFieldErrors().forEach(error -> 
-                errors.put(error.getField(), error.getDefaultMessage())
-            );
-            return ResponseEntity.badRequest().body(Map.of("errors", errors));
-        }
-
+            @Valid @RequestBody UserDto userDto) throws AuthException {
         userService.register(userDto);
         return ResponseEntity.ok().body(Map.of("message", "Регистрация успешна"));
     }
