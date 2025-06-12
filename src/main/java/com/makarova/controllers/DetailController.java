@@ -45,7 +45,7 @@ public class DetailController {
         
         model.addAttribute("apartmnetPhoto", photoUrl);
         model.addAttribute("type", dealType);
-        model.addAttribute("phone", userService.getUserPhone(userDto.getId()));
+        // model.addAttribute("phone", userService.getUserPhone(userDto.getId()));
 
         isFavorite = Boolean.toString(favoriteService.isApartmentInFavorites(
             userDto.getId(),

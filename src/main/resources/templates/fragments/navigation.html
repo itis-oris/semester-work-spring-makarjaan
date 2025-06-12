@@ -39,16 +39,6 @@
                         <a class="nav-link" th:href="@{/favorites}" th:if="${user != null}">Избранные</a>
                     </li>
                 </ul>
-
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item" th:if="${user != null}">
-                        <a th:href="@{/addadvert}" class="nav-link add-advert-btn">
-                            <button class="btn btn-primary btn-sm d-flex align-items-center gap-1" type="button">
-                                <i class="bi bi-plus-circle-fill"></i> Разместить объявление
-                            </button>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </div>
     </nav>

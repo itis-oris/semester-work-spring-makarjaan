@@ -1,6 +1,7 @@
 package com.makarova.service.impl;
 
 import com.makarova.dto.ApartmentDto;
+import com.makarova.dto.UserDto;
 import com.makarova.entity.Apartment;
 import com.makarova.entity.ApartmentPhoto;
 import com.makarova.entity.User;
@@ -103,6 +104,13 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .orElseThrow(() -> new RuntimeException("Apartment not found"));
 
         return ApartmentDto.from(apartment);
+    }
+
+    @Override
+    public void deleteByUser(UserDto userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        apartmentRepository.deleteApartmentByUser(user);
     }
 
 

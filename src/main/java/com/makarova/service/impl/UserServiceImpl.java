@@ -4,13 +4,20 @@ import com.makarova.dto.UserDto;
 import com.makarova.entity.Role;
 import com.makarova.entity.User;
 import com.makarova.repository.UserRepository;
+import com.makarova.service.ApartmentService;
 import com.makarova.service.UserService;
+import com.makarova.utils.CloudinaryUtil;
 import jakarta.security.auth.message.AuthException;
 import lombok.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -20,12 +27,15 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
+    private final CloudinaryUtil cloudinaryUtil;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ApartmentService apartmentService;
 
-    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, CloudinaryUtil cloudinaryUtil, ApartmentService apartmentService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.cloudinaryUtil = cloudinaryUtil;
+        this.apartmentService = apartmentService;
     }
 
 
@@ -62,13 +72,71 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).stream().findFirst();
     }
 
+
     @Override
-    public String getUserPhone(Long userId) {
-        return "";
+    @Transactional
+    public void updateProfilePhoto(UserDto user, MultipartFile profilePhoto) throws IOException {
+        File tempFile = File.createTempFile("upload-", ".tmp");
+        try {
+            profilePhoto.transferTo(tempFile);
+            String photoUrl = cloudinaryUtil.upload(tempFile, "photoUrl/" + user.getId());
+            userRepository.updateProfilePhotoUrl(user.getId(), photoUrl);
+        } finally {
+            Files.deleteIfExists(tempFile.toPath());
+        }
     }
 
     @Override
-    public String getUserMes(Long userId) {
-        return "";
+    public void deleteProfilePhoto(UserDto userDto) {
+        userRepository.deleteProfilePhoto(userDto.getId());
     }
+
+    @Transactional
+    @Override
+    public Boolean changePassword(UserDto user, String currentPassword, String newPassword) {
+        User existingUser = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        if (!passwordEncoder.matches(currentPassword, existingUser.getHashPassword())) {
+            return false;
+        }
+
+        if (newPassword.length() < 8) {
+            throw new IllegalArgumentException("Пароль должен быть не менее 8 символов");
+        }
+
+        existingUser.setHashPassword(passwordEncoder.encode(newPassword));
+
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccount(UserDto userDto) {
+
+        User user = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        apartmentService.deleteByUser(userDto);
+        userRepository.delete(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserInfo(UserDto userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        if (userDto.getUsername() != null && !userDto.getUsername().isBlank()) {
+            user.setUsername(userDto.getUsername());
+        }
+
+        if (userDto.getMessengers() != null) {
+            user.setMessengers(userDto.getMessengers());
+        }
+
+        userRepository.save(user);
+    }
+
+
 }

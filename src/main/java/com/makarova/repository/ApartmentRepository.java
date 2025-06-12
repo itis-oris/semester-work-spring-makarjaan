@@ -1,6 +1,7 @@
 package com.makarova.repository;
 
 import com.makarova.entity.Apartment;
+import com.makarova.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,14 +14,12 @@ import java.util.Optional;
 
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
 
-    List<Apartment> findByUser_Id(Long userId);
-
-    @Query("SELECT a.createdAt FROM Apartment a WHERE a.id = :id")
-    Timestamp getCreatedTime(@Param("id") Long id);
 
     Optional<Apartment> findById(Long id);
 
     List<Apartment> findByUser_IdAndDealType(Long userId, String dealType);
+
+    void deleteApartmentByUser(User user);
 
     @Modifying
     @Query("UPDATE Apartment a SET a.status = :status WHERE a.id = :id")

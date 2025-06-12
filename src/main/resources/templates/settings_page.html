@@ -4,161 +4,209 @@
     <meta charset="UTF-8">
     <title>Настройки</title>
 
-    <link th:href="@{/css/main.css}" rel="stylesheet"/>
-    <link th:href="@{/css/sign.css}" rel="stylesheet"/>
-    <link th:href="@{/css/settings.css}" rel="stylesheet">
+    <link th:href="@{/css/settings.css}" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"  rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"  rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 <div th:replace="fragments/navigation :: navigation"></div>
-<div class="container">
-    <div class="row mt-4">
-        <div class="col-md-3 me-4 border-end">
-            <div class="d-flex flex-column align-items-center text-center">
-                <img th:src="${user.profilePhotoUrl != null ? user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
-                     class="rounded-circle mb-3" width="150" height="150" alt="image">
-                <h5 class="text-center text-break" style="font-size: 20px; color: #1a1d20; max-width: 200px;" th:text="${user.username}">Имя пользователя</h5>
-            </div>
-            <hr class="my-3">
-            <nav>
-                <div class="nav flex-column">
-                    <a href="#" class="m-2 px-3 fs-6" data-tab="advertisement">Мои объявления</a>
-                    <a href="#" class="m-2 px-3 fs-6" data-tab="profile">Настройки профиля</a>
-                    <a href="#" class="m-2 px-3 fs-6" data-tab="security">Безопасность</a>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Левая панель -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="position-relative">
+                            <img th:src="${user.profilePhotoUrl != null ? user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
+                                 class="rounded-circle mb-3" width="100" height="100" 
+                                 style="object-fit: cover;" alt="Profile Photo">
+                        </div>
+                        <h5 class="mb-1" th:text="${user.username}">Имя пользователя</h5>
+                    </div>
+
+                    <div class="nav flex-column nav-pills">
+                        <a href="#" class="nav-link active mb-2" data-tab="advertisement">
+                            <i class="bi bi-house-door me-2"></i>Мои объявления
+                        </a>
+                        <a href="#" class="nav-link mb-2" data-tab="profile">
+                            <i class="bi bi-person me-2"></i>Настройки профиля
+                        </a>
+                        <a href="#" class="nav-link mb-2" data-tab="security">
+                            <i class="bi bi-shield-lock me-2"></i>Безопасность
+                        </a>
+                        <hr class="my-3">
+                        <a th:href="@{/logout}" class="nav-link text-danger">
+                            <i class="bi bi-box-arrow-right me-2"></i>Выйти
+                        </a>
+                    </div>
                 </div>
-            </nav>
-            <hr class="my-2">
-            <div class="nav flex-column">
-                <a th:href="@{/logout}" class="m-2 px-3 fs-6" style="color: #75000E">Выйти</a>
             </div>
         </div>
 
         <!-- Правый контент -->
-        <div class="col-md-7 ms-md-5" id="tabContent">
-
+        <div class="col-md-9" id="tabContent">
             <!-- Мои объявления -->
             <section id="advertisement" class="tab-section">
-                <h2>Мои объявления</h2>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Мои объявления</h4>
+                    <a th:href="@{/addadvert}" class="btn btn-primary">
+                        <i class="bi bi-plus-lg me-2"></i>Добавить объявление
+                    </a>
+                </div>
 
                 <!-- Нет объявлений -->
-                <div th:if="${#lists.isEmpty(apartmentsSale) and #lists.isEmpty(apartmentsRent)}">
-                    <hr class="my-3">
-                    <h3>У вас пока нет объявлений</h3>
-                    <form th:action="@{/addadvert}" method="get">
-                        <button type="submit" class="custom-btn mt-4">Разместить объявление</button>
-                    </form>
+                <div th:if="${#lists.isEmpty(apartmentsSale) and #lists.isEmpty(apartmentsRent)}" 
+                     class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-house-add display-4 text-muted mb-3"></i>
+                        <h5 class="text-muted mb-4">У вас пока нет объявлений</h5>
+                        <a th:href="@{/addadvert}" class="btn btn-primary">
+                            <i class="bi bi-plus-lg me-2"></i>Разместить объявление
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Есть объявления -->
                 <div th:unless="${#lists.isEmpty(apartmentsSale) and #lists.isEmpty(apartmentsRent)}">
-                    <nav>
-                        <ul class="nav nav-tabs justify-content-center border-bottom-0" id="adTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#sale">Продажа</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#rent">Аренда</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <ul class="nav nav-tabs mb-4" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#sale">
+                                <i class="bi bi-currency-dollar me-1"></i>Продажа
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#rent">
+                                <i class="bi bi-key me-1"></i>Аренда
+                            </a>
+                        </li>
+                    </ul>
 
-                    <div class="tab-content mt-3" id="adTabContent">
+                    <div class="tab-content">
                         <!-- Продажа -->
                         <div class="tab-pane fade show active" id="sale">
-                            <div class="container">
-                                <div th:if="${not #lists.isEmpty(apartmentsSale)}">
-                                    <div th:each="apartment : ${apartmentsSale}">
-                                        <div class="card mb-3 shadow-sm border-0 d-flex flex-row align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <a th:href="@{/details(type='sale', id=${apartment.id})}">
-                                                    <img th:src="${apartment.mainPhotoUrl}" class="rounded" style="width: 150px; height: 150px; object-fit: cover;" alt="dd">
-                                                </a>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h5 class="title mb-1" th:text="${apartment.title}">Заголовок</h5>
-                                                <p class="fw-bold mb-1" th:text="${apartment.priceSale + ' ₽'}">Цена</p>
-                                                <p class="text-muted mb-0" th:text="${apartment.address}">Адрес</p>
-                                            </div>
-                                            <div class="text-end ms-auto">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-light border-0" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="bi bi-three-dots"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                                                        <form method="post" onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
-                                                            <input type="hidden" name="dealType" value="sale">
-                                                            <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
-                                                            <input type="hidden" name="status" value=COMPLETED>
-                                                            <button class="dropdown-item text-warning" type="submit">Снять с публикации</button>
-                                                        </form>
-                                                        <li>
-                                                            <form method="post" onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
-                                                                <input type="hidden" name="dealType" value="sale">
-                                                                <input type="hidden" name="addvertApartIdForDelete" th:value="${apartment.id}">
-                                                                <button class="dropdown-item text-danger" type="submit">Удалить</button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
+                            <div th:if="${not #lists.isEmpty(apartmentsSale)}">
+                                <div th:each="apartment : ${apartmentsSale}" class="card border-0 shadow-sm mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            <a th:href="@{/details(type='sale', id=${apartment.id})}">
+                                                <img th:src="${apartment.mainPhotoUrl}" 
+                                                     class="img-fluid rounded-start h-100" 
+                                                     style="object-fit: cover;" 
+                                                     alt="Apartment Photo">
+                                            </a>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body h-100 d-flex flex-column">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5 class="card-title" th:text="${apartment.title}">Заголовок</h5>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                            <li>
+                                                                <form method="post" onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
+                                                                    <input type="hidden" name="dealType" value="sale">
+                                                                    <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
+                                                                    <input type="hidden" name="status" value="COMPLETED">
+                                                                    <button class="dropdown-item" type="submit">
+                                                                        <i class="bi bi-eye-slash me-2"></i>Снять с публикации
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li>
+                                                                <form method="post" onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
+                                                                    <input type="hidden" name="dealType" value="sale">
+                                                                    <input type="hidden" name="addvertApartIdForDelete" th:value="${apartment.id}">
+                                                                    <button class="dropdown-item text-danger" type="submit">
+                                                                        <i class="bi bi-trash me-2"></i>Удалить
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                                <span th:text="${apartment.status.displayName}">Статус</span>
+                                                <h4 class="mt-2 mb-3" th:text="${apartment.priceSale + ' ₽'}">Цена</h4>
+                                                <p class="text-muted mb-3">
+                                                    <i class="bi bi-geo-alt me-2"></i>
+                                                    <span th:text="${apartment.address}">Адрес</span>
+                                                </p>
+                                                <div class="mt-auto">
+                                                    <span class="badge bg-success" th:text="${apartment.status.displayName}">Статус</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div th:if="${#lists.isEmpty(apartmentsSale)}">
-                                    <p>Нет доступных объявлений</p>
-                                </div>
+                            </div>
+                            <div th:if="${#lists.isEmpty(apartmentsSale)}" class="text-center py-4">
+                                <p class="text-muted">Нет объявлений о продаже</p>
                             </div>
                         </div>
 
                         <!-- Аренда -->
                         <div class="tab-pane fade" id="rent">
-                            <div class="container">
-                                <div th:if="${not #lists.isEmpty(apartmentsRent)}">
-                                    <div th:each="apartment : ${apartmentsRent}">
-                                        <div class="card mb-3 shadow-sm border-0 d-flex flex-row align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <a th:href="@{details(type='rent', id=${apartment.id})}">
-                                                    <img th:src="${apartment.mainPhotoUrl}" class="rounded" style="width: 150px; height: 150px; object-fit: cover;" alt="image">
-                                                </a>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <h5 class="title mb-1" th:text="${apartment.title}">Заголовок</h5>
-                                                <p class="fw-bold mb-1" th:text="${apartment.priceRent + ' ₽'}">Цена</p>
-                                                <p class="text-muted mb-0" th:text="${apartment.address}">Адрес</p>
-                                            </div>
-                                            <div class="text-end ms-auto">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-light border-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="bi bi-three-dots"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
-                                                        <form method="post" onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
-                                                            <input type="hidden" name="dealType" value="rent">
-                                                            <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
-                                                            <input type="hidden" name="status" th:value="${T(com.makarova.entity.ApartmentStatus).COMPLETED.name()}">
-                                                            <button class="dropdown-item text-warning" type="submit">Снять с публикации</button>
-                                                        </form>
-                                                        <li>
-                                                            <form method="post" onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
-                                                                <input type="hidden" name="dealType" value="rent">
-                                                                <input type="hidden" name="addvertApartIdForDelete" th:value="${apartment.id}">
-                                                                <button class="dropdown-item text-danger" type="submit">Удалить</button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
+                            <div th:if="${not #lists.isEmpty(apartmentsRent)}">
+                                <div th:each="apartment : ${apartmentsRent}" class="card border-0 shadow-sm mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            <a th:href="@{details(type='rent', id=${apartment.id})}">
+                                                <img th:src="${apartment.mainPhotoUrl}" 
+                                                     class="img-fluid rounded-start h-100" 
+                                                     style="object-fit: cover;" 
+                                                     alt="Apartment Photo">
+                                            </a>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body h-100 d-flex flex-column">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5 class="card-title" th:text="${apartment.title}">Заголовок</h5>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                            <li>
+                                                                <form method="post" onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
+                                                                    <input type="hidden" name="dealType" value="rent">
+                                                                    <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
+                                                                    <input type="hidden" name="status" th:value="${T(com.makarova.entity.ApartmentStatus).COMPLETED.name()}">
+                                                                    <button class="dropdown-item" type="submit">
+                                                                        <i class="bi bi-eye-slash me-2"></i>Снять с публикации
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li>
+                                                                <form method="post" onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
+                                                                    <input type="hidden" name="dealType" value="rent">
+                                                                    <input type="hidden" name="addvertApartIdForDelete" th:value="${apartment.id}">
+                                                                    <button class="dropdown-item text-danger" type="submit">
+                                                                        <i class="bi bi-trash me-2"></i>Удалить
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                                <span th:text="${apartment.status.displayName}">Статус</span>
+                                                <h4 class="mt-2 mb-3" th:text="${apartment.priceRent + ' ₽/мес'}">Цена</h4>
+                                                <p class="text-muted mb-3">
+                                                    <i class="bi bi-geo-alt me-2"></i>
+                                                    <span th:text="${apartment.address}">Адрес</span>
+                                                </p>
+                                                <div class="mt-auto">
+                                                    <span class="badge bg-success" th:text="${apartment.status.displayName}">Статус</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div th:if="${#lists.isEmpty(apartmentsRent)}">
-                                    <p>Нет доступных объявлений</p>
-                                </div>
+                            </div>
+                            <div th:if="${#lists.isEmpty(apartmentsRent)}" class="text-center py-4">
+                                <p class="text-muted">Нет объявлений об аренде</p>
                             </div>
                         </div>
                     </div>
@@ -167,57 +215,94 @@
 
             <!-- Настройки профиля -->
             <section id="profile" class="tab-section d-none">
-                <h2>Настройки профиля</h2>
-                <form th:action="@{/settings}" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="profilePhoto" class="form-label">Фото профиля:</label>
-                        <div>
-                            <img th:src="${user.profilePhotoUrl != null ?
-                                     user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
-                                 class="rounded-circle ms-5 mt-2" width="100" height="100" alt="image">
-                        </div>
-                        <button type="submit" name="action" value="deletePhoto" class="btn mt-2">Удалить фотографию</button>
+                <h4 class="mb-4">Настройки профиля</h4>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <form th:action="@{/settings}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="action" value="uploadPhoto">
+                            <div class="row">
+                                <div class="col-md-4 text-center">
+                                    <img th:src="${user.profilePhotoUrl != null ? user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
+                                         class="rounded-circle mb-3" width="150" height="150" alt="Profile Photo">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm d-block w-100 mb-3">
+                                        <i class="bi bi-trash me-2"></i>Удалить фото
+                                    </button>
+                                    <div class="mb-3">
+                                        <label class="form-label">Загрузить новое фото</label>
+                                        <input type="file" class="form-control" id="profilePhoto" name="profilePhoto">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label">Имя</label>
+                                        <input type="text" name="changeUserName" class="form-control" id="firstName" 
+                                               th:value="${user.username}" placeholder="Введите ваше имя">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Telegram</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">@</span>
+                                            <input type="text" name="messengers" class="form-control" id="messengers" 
+                                                   th:value="${user.messengers}" placeholder="username">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-lg me-2"></i>Сохранить изменения
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="profilePhoto" class="form-label">Загрузить новое фото:</label>
-                        <input type="file" class="form-control" id="profilePhoto" name="profilePhoto">
-                    </div>
-                    <div class="mb-3">
-                        <label for="firstName" class="form-label">Имя:</label>
-                        <input type="text" name="changeUserName" class="form-control" id="firstName" th:value="${user.username}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="messengers" class="form-label">Telegram:</label>
-                        <input type="text" name="messengers" class="form-control" id="messengers" th:value="${user.messengers}">
-                    </div>
-                    <button type="submit" class="btn btn-primary" name="action" value="uploadPhoto">Сохранить изменения</button>
-                </form>
+                </div>
             </section>
 
             <!-- Безопасность -->
             <section id="security" class="tab-section d-none">
-                <h2>Безопасность</h2>
-                <form th:action="@{/settings}" method="post">
-                    <div class="mb-3">
-                        <label for="currentPassword" class="form-label">Текущий пароль:</label>
-                        <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                <h4 class="mb-4">Безопасность</h4>
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <form th:action="@{/settings}" method="post">
+                            <input type="hidden" name="action" value="changePassword">
+                            <div class="mb-3">
+                                <label class="form-label">Текущий пароль</label>
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" 
+                                       placeholder="Введите текущий пароль">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Новый пароль</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" 
+                                       placeholder="Введите новый пароль">
+                            </div>
+                            <div th:if="${errorMessage != null}" class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <span th:text="${errorMessage}">Ошибка</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-key me-2"></i>Обновить пароль
+                            </button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="newPassword" class="form-label">Новый пароль:</label>
-                        <input type="password" class="form-control" id="newPassword" name="newPassword">
+                </div>
+
+                <div class="card border-0 shadow-sm bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger mb-3">Удаление аккаунта</h5>
+                        <p class="text-muted mb-4">Это действие необратимо. Все ваши данные будут удалены.</p>
+                        <form th:action="@{/settings}" method="post" 
+                              onsubmit="return confirm('Вы уверены, что хотите удалить этот аккаунт? Это действие нельзя отменить.');">
+                            <button class="btn btn-outline-danger" type="submit" name="action" value="deleteAccount">
+                                <i class="bi bi-trash me-2"></i>Удалить аккаунт
+                            </button>
+                        </form>
                     </div>
-                    <div th:if="${errorMessage != null}" class="alert alert-danger" role="alert" th:text="${errorMessage}">Ошибка</div>
-                    <button type="submit" class="btn btn-primary">Обновить пароль</button>
-                </form>
-                <hr class="my-2">
-                <form th:action="@{/settings}" method="post" onsubmit="return confirm('Вы уверены, что хотите удалить этот аккаунт?');">
-                    <button class="btn btn-danger" type="submit" name="action" value="deleteAccount">Удалить аккаунт</button>
-                </form>
+                </div>
             </section>
         </div>
     </div>
 </div>
+
 <script th:src="@{/js/auth-menu.js}" defer></script>
 <script th:src="@{/js/api-sidebar.js}" defer></script>
+<script th:src="@{/js/settings.js}" defer></script>
 </body>
 </html>
