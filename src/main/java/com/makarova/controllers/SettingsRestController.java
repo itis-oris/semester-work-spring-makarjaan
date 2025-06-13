@@ -1,15 +1,13 @@
-package com.makarova.restControllers;
+package com.makarova.controllers;
 
 
 import com.makarova.dto.UserDto;
-import com.makarova.entity.User;
 import com.makarova.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,6 +52,7 @@ public class SettingsRestController {
                 return ResponseEntity.ok().build();
 
             case "deletePhoto":
+                System.out.println("Deleting photo for user: " + user.getEmail());
                 userService.deleteProfilePhoto(user);
                 return ResponseEntity.ok().build();
 

@@ -1,9 +1,7 @@
-package com.makarova.restControllers;
+package com.makarova.controllers;
 
 import com.makarova.dto.ApartmentDto;
 import com.makarova.service.ApartmentService;
-import com.makarova.service.PhotoService;
-import com.makarova.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController

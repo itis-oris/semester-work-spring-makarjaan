@@ -88,7 +88,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteProfilePhoto(UserDto userDto) {
-        userRepository.deleteProfilePhoto(userDto.getId());
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setProfilePhotoUrl(null);
+        userRepository.save(user);
     }
 
     @Transactional

@@ -1,4 +1,4 @@
-package com.makarova.restControllers;
+package com.makarova.controllers;
 
 
 import com.makarova.dto.UserDto;

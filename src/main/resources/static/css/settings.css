@@ -97,6 +97,21 @@ a:hover {
 }
 
 /* === Вкладки === */
+.nav-pills .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #007568; /* Зелёный цвет */
+    font-size: 16px;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link.active {
+    color: #ffffff; /* Белый текст на активной вкладке */
+    background-color: #007568; /* Зелёный фон */
+    font-weight: bold;
+}
+
 
 .nav-tabs .nav-link {
     border: none;

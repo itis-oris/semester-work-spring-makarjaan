@@ -1,4 +1,4 @@
-package com.makarova.restControllers;
+package com.makarova.controllers;
 
 import com.makarova.dto.JwtRequest;
 import com.makarova.dto.JwtResponse;
