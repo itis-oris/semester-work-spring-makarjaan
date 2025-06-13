@@ -31,9 +31,7 @@ public class DetailController {
                            @RequestParam("type") String dealType,
                            Model model,
                            Principal principal) {
-        if (principal == null) {
-            return "redirect:/signIn";
-        }
+
         ApartmentDto apartment;
         String isFavorite = "false";
 

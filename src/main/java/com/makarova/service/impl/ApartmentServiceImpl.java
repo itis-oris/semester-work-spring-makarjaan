@@ -168,6 +168,25 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
 
+    @Override
+    public List<ApartmentDto> getFavoriteApartmentsByEmail(String email) {
+        List<Apartment> apartments = apartmentRepository.findByUserEmailAndIsFavoriteTrue(email);
+        return apartments.stream()
+                .map(ApartmentDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean toggleFavoriteStatus(Long apartmentId, String userEmail) {
+        Apartment apartment = apartmentRepository.findByIdAndUserEmail(apartmentId, userEmail)
+                .orElseThrow(() -> new RuntimeException("Apartment not found or access denied"));
+
+        apartment.setIsFavorite(!apartment.getIsFavorite());
+        apartmentRepository.save(apartment);
+        return apartment.getIsFavorite();
+    }
+
+
     private ApartmentDto convertToDto(Apartment apartment) {
         return ApartmentDto.from(apartment);
     }

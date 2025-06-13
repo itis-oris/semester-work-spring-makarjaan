@@ -8,11 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
 
     List<Apartment> findByUser_IdAndDealType(Long userId, String dealType);
+
+    Optional<Apartment> findByIdAndUserEmail(Long id, String email);
 
     void deleteApartmentByUser(User user);
 
@@ -27,38 +30,7 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM Apartment a WHERE a.dealType = 'rent' AND a.typeOfRent = :typeRent")
     List<Apartment> findByDealTypeAndTypeOfRent(@Param("typeRent") String typeRent);
 
-    @Query("SELECT a FROM Apartment a " +
-            "WHERE a.dealType = 'sale' " +
-            "AND (:priceMin IS NULL OR a.priceSale >= :priceMin) " +
-            "AND (:priceMax IS NULL OR a.priceSale <= :priceMax) " +
-            "AND (:address IS NULL OR LOWER(a.address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
-            "AND (:rooms IS NULL OR a.roomsCount = :rooms) " +
-            "AND (:propertyType IS NULL OR a.typeOfApartment = :propertyType) " +
-            "AND a.status = 'Опубликовано'")
-    List<Apartment> findBySaleFilter(
-            @Param("priceMin") Integer priceMin,
-            @Param("priceMax") Integer priceMax,
-            @Param("address") String address,
-            @Param("rooms") String rooms,
-            @Param("propertyType") String propertyType);
-
-    @Query("SELECT a FROM Apartment a " +
-            "WHERE a.dealType = 'rent' " +
-            "AND (:typeOfRent IS NULL OR a.typeOfRent = :typeOfRent) " +
-            "AND (:priceMin IS NULL OR a.priceRent >= :priceMin) " +
-            "AND (:priceMax IS NULL OR a.priceRent <= :priceMax) " +
-            "AND (:address IS NULL OR LOWER(a.address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
-            "AND (:rooms IS NULL OR a.roomsCount = :rooms) " +
-            "AND (:propertyType IS NULL OR a.typeOfApartment = :propertyType) " +
-            "AND a.status = 'Опубликовано'")
-    List<Apartment> findByRentFilter(
-            @Param("typeOfRent") String typeOfRent,
-            @Param("priceMin") Integer priceMin,
-            @Param("priceMax") Integer priceMax,
-            @Param("address") String address,
-            @Param("rooms") String rooms,
-            @Param("propertyType") String propertyType);
-
+    List<Apartment> findByUserEmailAndIsFavoriteTrue(String email);
 
     @Query(value = """
         SELECT * FROM apartment a

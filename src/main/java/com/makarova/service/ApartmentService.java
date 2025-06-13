@@ -23,4 +23,8 @@ public interface ApartmentService {
     void deleteApartment(Long id);
 
     List<ApartmentDto> findApartmentsByFilter(ApartmentFilterDto filter);
+
+    List<ApartmentDto> getFavoriteApartmentsByEmail(String email);
+
+    boolean toggleFavoriteStatus(Long apartmentId, String userEmail);
 }

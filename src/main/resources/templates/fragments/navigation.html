@@ -35,8 +35,8 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/apartments}">Квартиры</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/favorites}" th:if="${user != null}">Избранные</a>
+                    <li class="nav-item" id="favoritesMenuItem" style="display:none;">
+                        <a class="nav-link" th:href="@{/favorites}">Избранные</a>
                     </li>
                 </ul>
             </div>
