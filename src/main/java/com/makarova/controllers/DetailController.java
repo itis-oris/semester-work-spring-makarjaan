@@ -31,13 +31,15 @@ public class DetailController {
                            @RequestParam("type") String dealType,
                            Model model,
                            Principal principal) {
-        
+        if (principal == null) {
+            return "redirect:/signIn";
+        }
         ApartmentDto apartment;
         String isFavorite = "false";
 
         apartment = apartmentService.getApartmentInfo(apartmentId);
 
-        UserDto userDto = userService.findByEmail("hui@ru");
+        UserDto userDto = userService.findByEmail(principal.getName());
 
 
         Long apartId = apartment.getId();

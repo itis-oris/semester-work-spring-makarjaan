@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch("/api/adverts/add", {
                 method: "POST",
+                credentials: "include",
                 body: new FormData(form)
             });
 

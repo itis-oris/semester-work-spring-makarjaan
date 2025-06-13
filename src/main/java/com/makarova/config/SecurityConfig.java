@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:8080"));
+//                    TODO add frontend url
+                    config.setAllowedOrigins(List.of("http://localhost:8080", "https://frontend"));
                     config.setAllowedMethods(List.of("*"));
                     config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
                     config.setAllowCredentials(true);
@@ -67,10 +68,7 @@ public class SecurityConfig {
                                 "/main",
                                 "/api/auth/register",
                                 "/api/**",
-                                "/addadvert",
-                                "/settings",
-                                "/details",
-                                "/apartments"
+                                "/details"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

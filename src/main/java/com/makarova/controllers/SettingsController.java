@@ -29,11 +29,11 @@ public class SettingsController {
 
     @GetMapping("/settings")
     public String getSettingsPage(Model model, Principal principal) {
-//        if (principal == null) {
-//            return "redirect:/login";
-//        }
+        if (principal == null) {
+            return "redirect:/signIn";
+        }
 
-        String email = "hui@ru";
+            String email = principal.getName();
         UserDto user = userService.findByEmail(email);
 
         List<ApartmentDto> apartmentsSale = apartmentService.getByUserIdAndDealType(user.getId(), "sale");

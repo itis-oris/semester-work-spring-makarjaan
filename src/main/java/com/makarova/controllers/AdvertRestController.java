@@ -5,6 +5,7 @@ import com.makarova.service.ApartmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +32,7 @@ public class AdvertRestController {
                         .body(Map.of("errors", Map.of("mainPhotoUrl", "Добавьте хотя бы одну фотографию")));
             }
 
-            String userEmail = "hui@ru";
+            String userEmail = principal.getName();
             apartmentService.saveAdvert(userEmail, apartmentDto, images);
             return ResponseEntity.ok().body(Map.of("message", "Объявление успешно добавлено"));
         } catch (Exception e) {

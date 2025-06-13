@@ -30,11 +30,17 @@ public class AuthRestController {
         refreshCookie.setPath("/");
         refreshCookie.setMaxAge(30 * 24 * 60 * 60);
         response.addCookie(refreshCookie);
+        Cookie accessCookie = new Cookie("accessToken", tokens.getAccessToken());
+        accessCookie.setHttpOnly(true);
+        accessCookie.setSecure(false);
+        accessCookie.setPath("/");
+        accessCookie.setMaxAge(60 * 60);
+        response.addCookie(accessCookie);
 
         System.out.println("Login successful for: " + authRequest.getEmail());
         System.out.println("Refresh token set in cookie");
 
-        return ResponseEntity.ok(new JwtResponse(tokens.getAccessToken(), null));
+        return ResponseEntity.ok(tokens);
     }
 
     @PostMapping("token")

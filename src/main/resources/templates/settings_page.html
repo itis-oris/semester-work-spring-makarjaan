@@ -21,7 +21,7 @@
                     <div class="text-center mb-4">
                         <div class="position-relative">
                             <img th:src="${user.profilePhotoUrl != null ? user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
-                                 class="rounded-circle mb-3" width="100" height="100" 
+                                 class="rounded-circle mb-3" width="100" height="100"
                                  style="object-fit: cover;" alt="Profile Photo">
                         </div>
                         <h5 class="mb-3" th:text="${user.username}">Имя пользователя</h5>
@@ -58,7 +58,7 @@
                 </div>
 
                 <!-- Нет объявлений -->
-                <div th:if="${#lists.isEmpty(apartmentsSale) and #lists.isEmpty(apartmentsRent)}" 
+                <div th:if="${#lists.isEmpty(apartmentsSale) and #lists.isEmpty(apartmentsRent)}"
                      class="card border-0 shadow-sm">
                     <div class="card-body text-center py-5">
                         <i class="bi bi-house-add display-4 text-muted mb-3"></i>
@@ -94,9 +94,9 @@
                                     <div class="row g-0">
                                         <div class="col-md-4">
                                             <a th:href="@{/details(type='sale', id=${apartment.id})}">
-                                                <img th:src="${apartment.mainPhotoUrl}" 
-                                                     class="img-fluid rounded-start h-100" 
-                                                     style="object-fit: cover;" 
+                                                <img th:src="${apartment.mainPhotoUrl}"
+                                                     class="img-fluid rounded-start h-100"
+                                                     style="object-fit: cover;"
                                                      alt="Apartment Photo">
                                             </a>
                                         </div>
@@ -156,9 +156,9 @@
                                     <div class="row g-0">
                                         <div class="col-md-4">
                                             <a th:href="@{details(type='rent', id=${apartment.id})}">
-                                                <img th:src="${apartment.mainPhotoUrl}" 
-                                                     class="img-fluid rounded-start h-100" 
-                                                     style="object-fit: cover;" 
+                                                <img th:src="${apartment.mainPhotoUrl}"
+                                                     class="img-fluid rounded-start h-100"
+                                                     style="object-fit: cover;"
                                                      alt="Apartment Photo">
                                             </a>
                                         </div>
@@ -227,37 +227,37 @@
                     <div class="card-body">
                         <form th:action="@{/settings}" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="action" id="formAction" value="uploadPhoto">                            <div class="row">
-                                <div class="col-md-4 text-center">
-                                    <img th:src="${user.profilePhotoUrl != null ? user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
-                                         class="rounded-circle mb-3" width="150" height="150" alt="Profile Photo">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm d-block w-100 mb-3"
-                                            onclick="document.getElementById('formAction').value = 'deletePhoto';">
-                                        <i class="bi bi-trash me-2"></i>Удалить фото
-                                    </button>
-                                    <div class="mb-3">
-                                        <label class="form-label">Загрузить новое фото</label>
-                                        <input type="file" class="form-control" id="profilePhoto" name="profilePhoto">
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="mb-3">
-                                        <label class="form-label">Имя</label>
-                                        <input type="text" name="changeUserName" class="form-control" id="firstName" 
-                                               th:value="${user.username}" placeholder="Введите ваше имя">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Telegram</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">@</span>
-                                            <input type="text" name="messengers" class="form-control" id="messengers" 
-                                                   th:value="${user.messengers}" placeholder="username">
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-check-lg me-2"></i>Сохранить изменения
-                                    </button>
+                            <div class="col-md-4 text-center">
+                                <img th:src="${user.profilePhotoUrl != null ? user.profilePhotoUrl : 'https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780390/%D0%94%D0%B5%D1%84%D0%BE%D0%BB%D1%82%D0%BD%D0%B0%D1%8F_%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B0_adpx3f.jpg'}"
+                                     class="rounded-circle mb-3" width="150" height="150" alt="Profile Photo">
+                                <button type="submit" class="btn btn-outline-danger btn-sm d-block w-100 mb-3"
+                                        onclick="document.getElementById('formAction').value = 'deletePhoto';">
+                                    <i class="bi bi-trash me-2"></i>Удалить фото
+                                </button>
+                                <div class="mb-3">
+                                    <label class="form-label">Загрузить новое фото</label>
+                                    <input type="file" class="form-control" id="profilePhoto" name="profilePhoto">
                                 </div>
                             </div>
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">Имя</label>
+                                    <input type="text" name="changeUserName" class="form-control" id="firstName"
+                                           th:value="${user.username}" placeholder="Введите ваше имя">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Telegram</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">@</span>
+                                        <input type="text" name="messengers" class="form-control" id="messengers"
+                                               th:value="${user.messengers}" placeholder="username">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-lg me-2"></i>Сохранить изменения
+                                </button>
+                            </div>
+                        </div>
                         </form>
                     </div>
                 </div>
@@ -272,12 +272,12 @@
                             <input type="hidden" name="action" value="changePassword">
                             <div class="mb-3">
                                 <label class="form-label">Текущий пароль</label>
-                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" 
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword"
                                        placeholder="Введите текущий пароль">
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Новый пароль</label>
-                                <input type="password" class="form-control" id="newPassword" name="newPassword" 
+                                <input type="password" class="form-control" id="newPassword" name="newPassword"
                                        placeholder="Введите новый пароль">
                             </div>
                             <div th:if="${errorMessage != null}" class="alert alert-danger" role="alert">

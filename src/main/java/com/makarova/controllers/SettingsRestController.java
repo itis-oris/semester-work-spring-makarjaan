@@ -8,12 +8,11 @@ import com.makarova.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -27,7 +26,7 @@ public class SettingsRestController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/api/settings")
     public ResponseEntity<?> handleSettingsAction(
             @RequestParam("action") String action,
-            @AuthenticationPrincipal UserDetails userDetails,
+            Principal userDetails,
             @RequestPart(name = "profilePhoto", required = false) MultipartFile profilePhoto,
             @RequestParam(name = "changeUserName", required = false) String username,
             @RequestParam(name = "messengers", required = false) String messengers,
@@ -38,7 +37,7 @@ public class SettingsRestController {
             @RequestParam(name = "dealType", required = false) String dealType,
             @RequestParam(name = "status", required = false) String status) throws IOException {
 
-        UserDto user = userService.findByEmail("hui@ru");
+        UserDto user = userService.findByEmail(userDetails.getName());
 
         switch (action) {
             case "uploadPhoto":

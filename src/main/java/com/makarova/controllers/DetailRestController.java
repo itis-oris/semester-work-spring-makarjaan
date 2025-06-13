@@ -28,7 +28,7 @@ public class DetailRestController {
             return ResponseEntity.ok("false");
         }
 
-        UserDto userDto = userService.findByEmail("hui@ru");
+        UserDto userDto = userService.findByEmail(principal.getName());
         boolean isFavorite = favoriteService.toggleFavorite(
             userDto.getId(),
             apartmentId,
