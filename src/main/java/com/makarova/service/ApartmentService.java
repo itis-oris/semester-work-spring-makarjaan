@@ -1,7 +1,9 @@
 package com.makarova.service;
 
 import com.makarova.dto.ApartmentDto;
+import com.makarova.dto.ApartmentFilterDto;
 import com.makarova.dto.UserDto;
+import com.makarova.entity.Apartment;
 import com.makarova.entity.ApartmentStatus;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,4 +21,6 @@ public interface ApartmentService {
     void changeStatus(Long id, ApartmentStatus newStatus);
 
     void deleteApartment(Long id);
+
+    List<ApartmentDto> findApartmentsByFilter(ApartmentFilterDto filter);
 }

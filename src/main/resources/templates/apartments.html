@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Квартиры</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/></head>
+<body>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="container mt-4">
+
+    <form method="post" th:action="@{/apartments}" th:object="${filter}" class="mb-4">
+        <input type="hidden" th:field="*{dealType}" id="dealTypeHidden">
+        <input type="hidden" th:field="*{rentType}" id="rentTypeHidden">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label for="priceMin" class="form-label">Цена (от):</label>
+                <input type="number" id="priceMin" th:field="*{priceMin}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label for="priceMax" class="form-label">Цена (до):</label>
+                <input type="number" id="priceMax" th:field="*{priceMax}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label for="address" class="form-label">Адрес:</label>
+                <input type="text" id="address" th:field="*{address}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label for="rooms" class="form-label">Комнаты:</label>
+                <select id="rooms" th:field="*{rooms}" class="form-select">
+                    <option value="">Любое</option>
+                    <option value="Студия">Студия</option>
+                    <option value="1-комнатная">1-комнатная</option>
+                    <option value="2-комнатная">2-комнатная</option>
+                    <option value="3-комнатная">3-комнатная</option>
+                    <option value="4-комнатная">4-комнатная</option>
+                    <option value="5+ комнат">5+ комнат</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="propertyType" class="form-label">Тип:</label>
+                <select id="propertyType" th:field="*{propertyType}" class="form-select">
+                    <option value="">Любой</option>
+                    <option value="Квартира">Квартира</option>
+                    <option value="Дом">Дом</option>
+                    <option value="Комната">Комната</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="custom-btn w-100">Поиск</button>
+                <button type="reset" class="custom-btn w-100" th:onclick="|window.location.href='@{/apartments}'|">Сброс</button>
+            </div>
+        </div>
+    </form>
+
+
+    <nav>
+        <div class="nav nav-tabs justify-content-center border-bottom-0" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-sale-tab" data-bs-toggle="tab" data-bs-target="#nav-sale"
+                    type="button" role="tab" aria-controls="nav-sale" aria-selected="true">Продажа</button>
+            <button class="nav-link" id="nav-rent-tab" data-bs-toggle="tab" data-bs-target="#nav-rent"
+                    type="button" role="tab" aria-controls="nav-rent" aria-selected="false">Аренда</button>
+        </div>
+    </nav>
+
+    <div class="tab-content mt-3" id="nav-tabContent1">
+
+        <!-- Продажа -->
+        <div class="tab-pane fade show active" id="nav-sale" role="tabpanel" aria-labelledby="nav-sale-tab">
+            <h2 class="mb-3 text-center">Объявления о продаже</h2>
+            <div class="row justify-content-center row-cols-1 row-cols-md-3 g-4">
+                <div class="col" th:each="apartment : ${apartmentsSale}" th:if="${apartment.status == 'Опубликовано'}">
+                    <a th:href="@{/details(id=${apartmentService.getApartId(apartment)}, type='sale')}"
+                       class="card mb-3 shadow-sm border-0 text-decoration-none">
+                        <img th:src="${photoService.getMainPhoto(apartmentService.getApartId(apartment), 'sale')}"
+                             class="card-img-top" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="title mb-2 fs-3" th:text="${apartment.title}">Заголовок</h5>
+                            <p class="fw-bold text-dark mb-2" th:text="${apartment.priceSale + ' ₽'}">Цена</p>
+                            <p class="text-dark mb-2" th:text="${apartment.address}">Адрес</p>
+                            <p class="text-muted small mb-0"
+                               th:text="'Опубликовано: ' + ${apartmentService.getDate(apartmentService.getCreatedTimeSale(apartmentService.getApartId(apartment)))}">
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Аренда -->
+        <div class="tab-pane fade" id="nav-rent" role="tabpanel" aria-labelledby="nav-rent-tab">
+            <h2 class="mb-3 text-center">Объявления об аренде</h2>
+            <nav>
+                <div class="nav nav-tabs justify-content-center border-bottom-0" id="rent-tab" role="tablist">
+                    <button class="nav-link active" id="rent-short-tab" data-bs-toggle="tab"
+                            data-bs-target="#rent-short" type="button" role="tab"
+                            aria-controls="rent-short" aria-selected="true">Посуточно</button>
+                    <button class="nav-link" id="rent-long-tab" data-bs-toggle="tab"
+                            data-bs-target="#rent-long" type="button" role="tab"
+                            aria-controls="rent-long" aria-selected="false">Долгосрочно</button>
+                </div>
+            </nav>
+
+            <div class="tab-content mt-3" id="rent-tabContent">
+
+                <!-- Посуточно -->
+                <div class="tab-pane fade show active" id="rent-short" role="tabpanel" aria-labelledby="rent-short-tab">
+                    <div class="row justify-content-center row-cols-1 row-cols-md-3 g-4">
+                        <div class="col" th:each="apartment : ${apartmentsShortRent}" th:if="${apartment.status == 'Опубликовано'}">
+                            <a th:href="@{/details(id=${apartmentService.getApartId(apartment)}, type='rent')}"
+                               class="card mb-3 shadow-sm border-0 text-decoration-none">
+                                <img th:src="${photoService.getMainPhoto(apartmentService.getApartId(apartment), 'rent')}"
+                                     class="card-img-top" style="height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="title mb-2 fs-3" th:text="${apartment.title}">Заголовок</h5>
+                                    <p class="fw-bold text-dark mb-2" th:text="${apartment.priceRent + ' ₽'}">Цена</p>
+                                    <p class="text-dark mb-2" th:text="${apartment.address}">Адрес</p>
+                                    <p class="text-muted small mb-0"
+                                       th:text="'Опубликовано: ' + ${apartmentService.getDate(apartmentService.getCreatedTimeRent(apartmentService.getApartId(apartment)))}">
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Долгосрочно -->
+                <div class="tab-pane fade" id="rent-long" role="tabpanel" aria-labelledby="rent-long-tab">
+                    <div class="row justify-content-center row-cols-1 row-cols-md-3 g-4">
+                        <div class="col" th:each="apartment : ${apartmentsLongRent}" th:if="${apartment.status == 'Опубликовано'}">
+                            <a th:href="@{/details(id=${apartmentService.getApartId(apartment)}, type='rent')}"
+                               class="card mb-3 shadow-sm border-0 text-decoration-none">
+                                <img th:src="${photoService.getMainPhoto(apartmentService.getApartId(apartment), 'rent')}"
+                                     class="card-img-top" style="height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="title mb-2 fs-3" th:text="${apartment.title}">Заголовок</h5>
+                                    <p class="fw-bold text-dark mb-2" th:text="${apartment.priceRent + ' ₽'}">Цена</p>
+                                    <p class="text-dark mb-2" th:text="${apartment.address}">Адрес</p>
+                                    <p class="text-muted small mb-0"
+                                       th:text="'Опубликовано: ' + ${apartmentService.getDate(apartmentService.getCreatedTimeRent(apartmentService.getApartId(apartment)))}">
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script th:src="@{/js/apartments.js}" defer></script>
+</body>
+</html>

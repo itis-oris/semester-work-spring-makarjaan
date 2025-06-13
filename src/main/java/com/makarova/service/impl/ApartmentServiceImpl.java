@@ -1,6 +1,7 @@
 package com.makarova.service.impl;
 
 import com.makarova.dto.ApartmentDto;
+import com.makarova.dto.ApartmentFilterDto;
 import com.makarova.dto.UserDto;
 import com.makarova.entity.Apartment;
 import com.makarova.entity.ApartmentPhoto;
@@ -18,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -128,5 +131,37 @@ public class ApartmentServiceImpl implements ApartmentService {
         apartmentRepository.deleteById(id);
     }
 
+
+    @Override
+    public List<ApartmentDto> findApartmentsByFilter(ApartmentFilterDto filter) {
+        String dealType = null;
+        String rentType = null;
+
+        if ("Продажа".equalsIgnoreCase(filter.getDealType())) {
+            dealType = "Продажа";
+        } else if ("Аренда".equalsIgnoreCase(filter.getDealType())) {
+            dealType = "Аренда";
+            rentType = filter.getRentType();
+        }
+
+        List<Apartment> apartments = apartmentRepository.findApartmentsByFilter(
+                dealType,
+                rentType,
+                filter.getPriceMin(),
+                filter.getPriceMax(),
+                filter.getAddress(),
+                filter.getRooms(),
+                filter.getPropertyType()
+        );
+
+        return apartments.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    private ApartmentDto convertToDto(Apartment apartment) {
+        return ApartmentDto.from(apartment);
+    }
 
 }

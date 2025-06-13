@@ -7,15 +7,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
-
-
-    Optional<Apartment> findById(Long id);
 
     List<Apartment> findByUser_IdAndDealType(Long userId, String dealType);
 
@@ -32,28 +27,57 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM Apartment a WHERE a.dealType = 'rent' AND a.typeOfRent = :typeRent")
     List<Apartment> findByDealTypeAndTypeOfRent(@Param("typeRent") String typeRent);
 
-    default List<Apartment> filterApartmentsSale(
-            BigDecimal priceMin, BigDecimal priceMax, String address, String rooms, String propertyType) {
-        return filterApartments("sale", priceMin, priceMax, address, rooms, propertyType);
-    }
-
-    default List<Apartment> filterApartmentsRent(
-            String type, BigDecimal priceMin, BigDecimal priceMax, String address, String rooms, String propertyType) {
-        return filterApartments("rent", priceMin, priceMax, address, rooms, propertyType);
-    }
-
-    @Query("SELECT a FROM Apartment a WHERE a.dealType = :dealType " +
-            "AND (:priceMin IS NULL OR (a.priceSale BETWEEN :priceMin AND :priceMax OR a.priceRent BETWEEN :priceMin AND :priceMax)) " +
-            "AND (:address IS NULL OR a.address LIKE %:address%) " +
+    @Query("SELECT a FROM Apartment a " +
+            "WHERE a.dealType = 'sale' " +
+            "AND (:priceMin IS NULL OR a.priceSale >= :priceMin) " +
+            "AND (:priceMax IS NULL OR a.priceSale <= :priceMax) " +
+            "AND (:address IS NULL OR LOWER(a.address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
             "AND (:rooms IS NULL OR a.roomsCount = :rooms) " +
-            "AND (:propertyType IS NULL OR a.typeOfApartment = :propertyType)")
-    List<Apartment> filterApartments(
-            @Param("dealType") String dealType,
-            @Param("priceMin") BigDecimal priceMin,
-            @Param("priceMax") BigDecimal priceMax,
+            "AND (:propertyType IS NULL OR a.typeOfApartment = :propertyType) " +
+            "AND a.status = 'Опубликовано'")
+    List<Apartment> findBySaleFilter(
+            @Param("priceMin") Integer priceMin,
+            @Param("priceMax") Integer priceMax,
             @Param("address") String address,
             @Param("rooms") String rooms,
             @Param("propertyType") String propertyType);
 
+    @Query("SELECT a FROM Apartment a " +
+            "WHERE a.dealType = 'rent' " +
+            "AND (:typeOfRent IS NULL OR a.typeOfRent = :typeOfRent) " +
+            "AND (:priceMin IS NULL OR a.priceRent >= :priceMin) " +
+            "AND (:priceMax IS NULL OR a.priceRent <= :priceMax) " +
+            "AND (:address IS NULL OR LOWER(a.address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
+            "AND (:rooms IS NULL OR a.roomsCount = :rooms) " +
+            "AND (:propertyType IS NULL OR a.typeOfApartment = :propertyType) " +
+            "AND a.status = 'Опубликовано'")
+    List<Apartment> findByRentFilter(
+            @Param("typeOfRent") String typeOfRent,
+            @Param("priceMin") Integer priceMin,
+            @Param("priceMax") Integer priceMax,
+            @Param("address") String address,
+            @Param("rooms") String rooms,
+            @Param("propertyType") String propertyType);
+
+
+    @Query("""
+        select a from Apartment a
+        where (:dealType is null or a.dealType = :dealType)
+          and (:rentType is null or a.typeOfRent = :rentType)
+          and (:priceMin is null or (a.priceSale >= :priceMin or a.priceRent >= :priceMin))
+          and (:priceMax is null or (a.priceSale <= :priceMax or a.priceRent <= :priceMax))
+          and (:address is null or lower(a.address) like lower(concat('%', :address, '%')))
+          and (:rooms is null or a.roomsCount = :rooms)
+          and (:propertyType is null or a.typeOfApartment = :propertyType)
+          and a.status = 'Опубликовано'
+        """)
+    List<Apartment> findApartmentsByFilter(
+            @Param("dealType") String dealType,
+            @Param("rentType") String rentType,
+            @Param("priceMin") Integer priceMin,
+            @Param("priceMax") Integer priceMax,
+            @Param("address") String address,
+            @Param("rooms") String rooms,
+            @Param("propertyType") String propertyType);
 
 }

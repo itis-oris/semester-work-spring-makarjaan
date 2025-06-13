@@ -69,7 +69,8 @@ public class SecurityConfig {
                                 "/api/**",
                                 "/addadvert",
                                 "/settings",
-                                "/details"
+                                "/details",
+                                "/apartments"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
