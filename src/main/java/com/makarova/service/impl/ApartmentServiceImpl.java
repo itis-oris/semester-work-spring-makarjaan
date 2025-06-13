@@ -4,6 +4,7 @@ import com.makarova.dto.ApartmentDto;
 import com.makarova.dto.UserDto;
 import com.makarova.entity.Apartment;
 import com.makarova.entity.ApartmentPhoto;
+import com.makarova.entity.ApartmentStatus;
 import com.makarova.entity.User;
 import com.makarova.repository.ApartmentPhotoRepository;
 import com.makarova.repository.ApartmentRepository;
@@ -111,6 +112,20 @@ public class ApartmentServiceImpl implements ApartmentService {
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         apartmentRepository.deleteApartmentByUser(user);
+    }
+
+    @Override
+    public void changeStatus(Long id, ApartmentStatus newStatus) {
+        Apartment apartment = apartmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
+
+        apartment.setStatus(newStatus);
+        apartmentRepository.save(apartment);
+    }
+
+    @Override
+    public void deleteApartment(Long id) {
+        apartmentRepository.deleteById(id);
     }
 
 

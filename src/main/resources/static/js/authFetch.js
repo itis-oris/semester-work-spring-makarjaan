@@ -1,29 +1,19 @@
 async function authFetch(url, options = {}) {
-    const token = sessionStorage.getItem("accessToken");
-    console.log('Token: (из консоля): ', token);
+    const accessToken = sessionStorage.getItem('accessToken');
 
-    options.headers = options.headers || {};
-
-    if (token) {
-        options.headers.Authorization = `Bearer ${token}`;
-    }
-
-    options.credentials = 'include';
+    options.headers = {
+        ...options.headers,
+        ...(accessToken && { 'Authorization': 'Bearer ' + accessToken }),
+        ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' })
+    };
 
     console.log('Making request to:', url);
+    let response = await fetch(url, options);
 
-    let response;
-    try {
-        response = await fetch(url, options);
-        console.log('Response status:', response.status);
+    if (response.status === 401) {
+        console.log('Access token expired, refreshing...');
 
-        if (response.ok) {
-            return response;
-        }
-
-        if (response.status === 401) {
-            console.log('Access token expired, refreshing...');
-
+        try {
             const refreshResponse = await fetch('/api/auth/token', {
                 method: 'POST',
                 credentials: 'include'
@@ -34,22 +24,20 @@ async function authFetch(url, options = {}) {
                 sessionStorage.setItem('accessToken', newToken);
                 console.log('New access token stored');
 
-                // Обновляем заголовок с новым токеном
-                options.headers.Authorization = `Bearer ${newToken}`;
-
-                // Повторяем исходный запрос
+                options.headers['Authorization'] = 'Bearer ' + newToken;
                 return fetch(url, options);
             } else {
                 console.error('Refresh token failed');
                 sessionStorage.removeItem('accessToken');
-                throw new Error('Session expired and could not refresh token');
+                window.location.href = '/signIn';
+                return Promise.reject(new Error('Session expired'));
             }
+        } catch (refreshError) {
+            console.error('Token refresh error:', refreshError);
+            window.location.href = '/signIn';
+            return Promise.reject(refreshError);
         }
-
-        return response;
-
-    } catch (error) {
-        console.error('Fetch error:', error);
-        throw error;
     }
+
+    return response;
 }

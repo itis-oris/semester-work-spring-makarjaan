@@ -2,6 +2,8 @@ package com.makarova.controllers;
 
 
 import com.makarova.dto.UserDto;
+import com.makarova.entity.ApartmentStatus;
+import com.makarova.service.ApartmentService;
 import com.makarova.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -19,11 +21,12 @@ import java.util.Map;
 public class SettingsRestController {
 
     private final UserService userService;
+    private final ApartmentService apartmentService;
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/api/settings")
     public ResponseEntity<?> handleSettingsAction(
-            @RequestPart("action") String action,
+            @RequestParam("action") String action,
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestPart(name = "profilePhoto", required = false) MultipartFile profilePhoto,
             @RequestParam(name = "changeUserName", required = false) String username,
@@ -52,8 +55,6 @@ public class SettingsRestController {
                 return ResponseEntity.ok().build();
 
             case "deletePhoto":
-                System.out.println("Deleting photo for user: " + user.getEmail());
-                userService.deleteProfilePhoto(user);
                 return ResponseEntity.ok().build();
 
             case "changePassword":
@@ -68,11 +69,11 @@ public class SettingsRestController {
                 return ResponseEntity.ok().build();
 
             case "unpublishApartment":
-                // apartmentService.changeStatus(apartmentIdUnpublish, ApartmentStatus.valueOf(status));
+                apartmentService.changeStatus(apartmentIdUnpublish, ApartmentStatus.valueOf(status));
                 return ResponseEntity.ok().build();
 
             case "deleteApartment":
-                // apartmentService.deleteApartment(apartmentIdDelete);
+                apartmentService.deleteApartment(apartmentIdDelete);
                 return ResponseEntity.ok().build();
 
             default:
