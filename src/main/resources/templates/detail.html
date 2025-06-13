@@ -58,8 +58,13 @@
             <p><strong>Площадь:</strong> <span th:text="${apartment.area}"></span> м²</p>
             <p th:if="${type == 'rent'}"><strong>Тип аренды:</strong> <span th:text="${apartment.typeOfRent}"></span></p>
 
+            <p>Authenticated: <span sec:authorize="isAuthenticated()">true</span><span sec:authorize="isAnonymous()">false</span></p>
+            <p>Username: <span sec:authentication="name">anonymous</span></p>
+
+
+
             <div class="d-flex gap-3 mt-4">
-                <div sec:authorize="hasAuthority('ADMIN')">
+                <div sec:authorize="hasRole('ADMIN')">
                 <form method="post" th:action="@{/admin}">
                         <input type="hidden" name="apartmentId" th:value="${apartment.id}">
                         <input type="hidden" name="dealType" th:value="${type}">

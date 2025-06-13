@@ -1,5 +1,6 @@
 package com.makarova.filter;
 
+import com.makarova.entity.Role;
 import com.makarova.entity.User;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -20,6 +21,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtProvider {
@@ -41,11 +43,15 @@ public class JwtProvider {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
+        System.out.println("User roles: " + user.getRoles());
+
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-                .claim("roles", user.getRoles())
+                .claim("roles", user.getRoles().stream()
+                        .map(role -> "ROLE_" + role.name())
+                        .collect(Collectors.toList()))
                 .claim("name", user.getUsername())
                 .compact();
     }

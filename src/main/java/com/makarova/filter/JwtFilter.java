@@ -37,26 +37,24 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             final String token = getTokenFromRequest(request);
             System.out.println("Token from request: " + token);
-            
+
             if (token != null && jwtProvider.validateAccessToken(token)) {
                 final Claims claims = jwtProvider.getAccessClaims(token);
                 final String email = claims.getSubject();
-                
-                // Создаем список ролей из claims
+                System.out.println("Roles claim raw: " + claims.get("roles"));
+
                 List<SimpleGrantedAuthority> authorities = ((List<String>) claims.get("roles", List.class))
                         .stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                // Создаем аутентификацию
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, // principal
-                        null,  // credentials
+                        email,
+                        null,
                         authorities
                 );
                 authentication.setDetails(claims);
 
-                // Устанавливаем аутентификацию в контекст
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 System.out.println("Authenticated user: " + email);
             } else {
@@ -74,13 +72,11 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        // Сначала проверяем Authorization header
         String authHeader = request.getHeader("Authorization");
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
 
-        // Если нет в Authorization, ищем в куках
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             Optional<Cookie> accessTokenCookie = Arrays.stream(cookies)

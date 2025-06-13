@@ -45,11 +45,12 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
-    private Set<Role> roles;
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
+
 
     public enum State {
         ACTIVE, BANNED
