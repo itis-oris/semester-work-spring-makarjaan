@@ -11,7 +11,11 @@
 <body>
 <div th:replace="~{fragments/navigation :: navigation}"></div>
 
+<!-- Подгрузка фрагмента чата -->
+<div th:replace="~{fragments/lodgify-chat-widget :: widget}"></div>
+
 <div class="container mt-5">
+    <!-- Твой основной контент и остальная логика -->
     <div class="row">
         <div class="col-md-6 mb-4">
             <div id="carouselExampleRide" class="carousel slide mb-4 shadow" data-bs-ride="carousel">
@@ -40,7 +44,6 @@
                             th:attr="data-apartment-id=${apartment.id}">
                         <i id="heartIcon" th:class="'bi ' + (${isFavorite == 'true'} ? 'bi-heart-fill' : 'bi-heart')" style="font-size: 1.5em;"></i>
                     </button>
-
                 </div>
             </h2>
 
@@ -62,11 +65,9 @@
             <p>Authenticated: <span sec:authorize="isAuthenticated()">true</span><span sec:authorize="isAnonymous()">false</span></p>
             <p>Username: <span sec:authentication="name">anonymous</span></p>
 
-
-
             <div class="d-flex gap-3 mt-4">
                 <div sec:authorize="hasRole('ADMIN')">
-                <form method="post" th:action="@{/admin}">
+                    <form method="post" th:action="@{/admin}">
                         <input type="hidden" name="apartmentId" th:value="${apartment.id}">
                         <input type="hidden" name="dealType" th:value="${type}">
                         <button class="btn btn-success w-100" type="submit" name="action" value="approve">Одобрить</button>
@@ -80,17 +81,9 @@
                 </div>
 
                 <div sec:authorize="isAuthenticated()">
-                    <button id="phoneButton" class="btn btn-primary" type="button" onclick="showPhoneNumber()">
-                        Показать телефон
+                    <button id="chatToggleButton" class="btn btn-secondary" type="button" onclick="toggleChat()">
+                        Написать
                     </button>
-
-                    <div id="phoneNumber" class="mt-2 d-flex align-items-center gap-4 d-none">
-                        <p class="mb-0"><strong>Телефон:</strong></p>
-                        <span class="text-body fw-normal" th:text="${phone}"></span>
-                        <p class="mb-0 ms-4"><strong>Telegram:</strong></p>
-                        <a class="text-primary text-decoration-underline fw-normal"
-                           th:href="${telegram}" th:text="${telegram}"></a>
-                    </div>
                 </div>
 
                 <div sec:authorize="isAnonymous()">
@@ -144,6 +137,16 @@
             }
         } catch (error) {
             console.error('Ошибка:', error);
+        }
+    }
+
+    function toggleChat() {
+        const chat = document.getElementById('chatWidget');
+        if (!chat) return;
+        if (chat.style.display === 'none' || chat.style.display === '') {
+            chat.style.display = 'block';
+        } else {
+            chat.style.display = 'none';
         }
     }
 </script>

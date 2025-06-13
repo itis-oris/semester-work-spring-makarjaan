@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+<div class="container-fluid" style="height: 100vh;">
+    <div class="row h-100">
+        <div class="col-3 border-end p-0" style="background: #fafbfc;">
+            <div class="p-3 border-bottom">
+                <span class="fw-bold fs-5">Чаты</span>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="unreadOnly">
+                    <label class="form-check-label" for="unreadOnly">Только непрочитанные</label>
+                </div>
+            </div>
+            <div class="list-group list-group-flush" style="height: calc(100vh - 80px); overflow-y: auto;">
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex align-items-center">
+                        <img src="/static/img/user1.png" alt="" width="32" class="me-2">
+                        <div>
+                            <div class="fw-bold small">Менеджер Lodgify</div>
+                            <div class="text-muted small">Квартира на Арбате</div>
+                        </div>
+                        <span class="ms-auto small text-muted">12:34</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-9 d-flex flex-column align-items-center justify-content-center" style="background: #fff;">
+            <div class="text-center">
+                <img src="https://yastatic.net/s3/hrcrm-front/landing-v2/chat-empty.svg" alt="empty" style="width: 200px;">
+                <div class="mt-4 fs-5 fw-bold">Начните общаться с менеджерами Lodgify</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
