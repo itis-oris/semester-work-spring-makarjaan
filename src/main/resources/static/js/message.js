@@ -33,7 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const input = document.getElementById('chatInput');
         const text = input.value.trim();
         if (text && stompClient) {
-            stompClient.send("/app/chat.send", {}, JSON.stringify({'sender': 'Пользователь', 'content': text}));
+            const sender = window.currentUserName || 'Гость';
+            stompClient.send("/app/chat.send", {}, JSON.stringify({
+                'sender': sender,
+                'content': text
+            }));
             input.value = '';
         }
     };

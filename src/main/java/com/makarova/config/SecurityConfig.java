@@ -45,7 +45,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-//                    TODO add frontend url
                     config.setAllowedOrigins(List.of("http://localhost:8080", "https://frontend"));
                     config.setAllowedMethods(List.of("*"));
                     config.setAllowedHeaders(List.of("Content-Type", "Authorization"));

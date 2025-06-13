@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Главная</title>
@@ -26,6 +26,13 @@
                     <button type="submit" class="btn btn-primary">Найти</button>
                 </form>
             </div>
+        </div>
+
+        <div sec:authentication="username">
+            <p>Вы авторизованы как <span sec:authentication="username"></span></p>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            <p>Вы не авторизованы</p>
         </div>
 
         <div class="container py-5">
