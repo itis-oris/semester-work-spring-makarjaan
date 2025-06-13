@@ -70,7 +70,7 @@ public class SecurityConfig {
                                 "/api/**",
                                 "/details"
                         ).permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();

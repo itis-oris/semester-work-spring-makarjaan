@@ -137,25 +137,33 @@ public class ApartmentServiceImpl implements ApartmentService {
         String dealType = null;
         String rentType = null;
 
-        if ("Продажа".equalsIgnoreCase(filter.getDealType())) {
-            dealType = "Продажа";
-        } else if ("Аренда".equalsIgnoreCase(filter.getDealType())) {
-            dealType = "Аренда";
-            rentType = filter.getRentType();
+        if (filter != null) {
+            if ("Продажа".equalsIgnoreCase(filter.getDealType())) {
+                dealType = "sale";
+            } else if ("Аренда".equalsIgnoreCase(filter.getDealType())) {
+                dealType = "rent";
+                if (filter.getRentType() != null) {
+                    if ("Посуточно".equalsIgnoreCase(filter.getRentType())) {
+                        rentType = "Посуточно";
+                    } else if ("Долгосрочно".equalsIgnoreCase(filter.getRentType())) {
+                        rentType = "Долгосрочно";
+                    }
+                }
+            }
         }
 
         List<Apartment> apartments = apartmentRepository.findApartmentsByFilter(
                 dealType,
                 rentType,
-                filter.getPriceMin(),
-                filter.getPriceMax(),
-                filter.getAddress(),
-                filter.getRooms(),
-                filter.getPropertyType()
+                filter != null ? filter.getPriceMin() : null,
+                filter != null ? filter.getPriceMax() : null,
+                filter != null ? filter.getAddress() : null,
+                filter != null ? filter.getRooms() : null,
+                filter != null ? filter.getPropertyType() : null
         );
 
         return apartments.stream()
-                .map(this::convertToDto)
+                .map(ApartmentDto::from)
                 .collect(Collectors.toList());
     }
 

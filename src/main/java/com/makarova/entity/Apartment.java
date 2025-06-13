@@ -17,45 +17,50 @@ public class Apartment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "type_of_apartment", nullable = false)
     private String typeOfApartment;
 
-    @Column(nullable = false)
+    @Column(name = "rooms_count", nullable = false)
     private String roomsCount;
 
-    @Column(nullable = false)
+    @Column(name = "area", nullable = false)
     private Double area;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private ApartmentStatus status;
 
-    @Column(nullable = false)
+    @Column(name = "address", nullable = false, columnDefinition = "TEXT")
     private String address;
 
-    @Column(nullable = false)
+    @Column(name = "deal_type", nullable = false)
     private String dealType;
 
+    @Column(name = "price_sale")
     private Integer priceSale;
 
+    @Column(name = "price_rent")
     private Integer priceRent;
 
+    @Column(name = "type_of_rent")
     private String typeOfRent;
 
-    @Column(nullable = false)
+    @Column(name = "is_favorite", nullable = false)
     private Boolean isFavorite;
 
+    @Column(name = "main_photo_url")
     private String mainPhotoUrl;
 
     @ManyToOne

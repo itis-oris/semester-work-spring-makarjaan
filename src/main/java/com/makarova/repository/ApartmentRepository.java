@@ -60,17 +60,17 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             @Param("propertyType") String propertyType);
 
 
-    @Query("""
-        select a from Apartment a
-        where (:dealType is null or a.dealType = :dealType)
-          and (:rentType is null or a.typeOfRent = :rentType)
-          and (:priceMin is null or (a.priceSale >= :priceMin or a.priceRent >= :priceMin))
-          and (:priceMax is null or (a.priceSale <= :priceMax or a.priceRent <= :priceMax))
-          and (:address is null or lower(a.address) like lower(concat('%', :address, '%')))
-          and (:rooms is null or a.roomsCount = :rooms)
-          and (:propertyType is null or a.typeOfApartment = :propertyType)
-          and a.status = 'Опубликовано'
-        """)
+    @Query(value = """
+        SELECT * FROM apartment a
+        WHERE (:dealType IS NULL OR a.deal_type = :dealType)
+          AND (:rentType IS NULL OR a.type_of_rent = :rentType)
+          AND (:priceMin IS NULL OR (a.price_sale >= :priceMin OR a.price_rent >= :priceMin))
+          AND (:priceMax IS NULL OR (a.price_sale <= :priceMax OR a.price_rent <= :priceMax))
+          AND (:address IS NULL OR a.address::text ILIKE CONCAT('%', :address, '%'))
+          AND (:rooms IS NULL OR a.rooms_count = :rooms)
+          AND (:propertyType IS NULL OR a.type_of_apartment = :propertyType)
+          AND a.status = 'Опубликовано'
+        """, nativeQuery = true)
     List<Apartment> findApartmentsByFilter(
             @Param("dealType") String dealType,
             @Param("rentType") String rentType,

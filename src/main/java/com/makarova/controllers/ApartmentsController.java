@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -24,9 +25,25 @@ public class ApartmentsController {
     @GetMapping("/apartments")
     public String showApartments(Model model) {
         model.addAttribute("filter", new ApartmentFilterDto());
-        model.addAttribute("apartmentsSale", List.of());
-        model.addAttribute("apartmentsShortRent", List.of());
-        model.addAttribute("apartmentsLongRent", List.of());
+        
+        List<ApartmentDto> allApartments = apartmentService.findApartmentsByFilter(null);
+        
+        List<ApartmentDto> apartmentsSale = allApartments.stream()
+                .filter(a -> "sale".equals(a.getDealType()))
+                .collect(Collectors.toList());
+                
+        List<ApartmentDto> apartmentsShortRent = allApartments.stream()
+                .filter(a -> "rent".equals(a.getDealType()) && "Посуточно".equals(a.getTypeOfRent()))
+                .collect(Collectors.toList());
+                
+        List<ApartmentDto> apartmentsLongRent = allApartments.stream()
+                .filter(a -> "rent".equals(a.getDealType()) && "Долгосрочно".equals(a.getTypeOfRent()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("apartmentsSale", apartmentsSale);
+        model.addAttribute("apartmentsShortRent", apartmentsShortRent);
+        model.addAttribute("apartmentsLongRent", apartmentsLongRent);
+        
         return "apartments";
     }
 

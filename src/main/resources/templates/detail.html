@@ -59,8 +59,8 @@
             <p th:if="${type == 'rent'}"><strong>Тип аренды:</strong> <span th:text="${apartment.typeOfRent}"></span></p>
 
             <div class="d-flex gap-3 mt-4">
-                <div sec:authorize="hasRole('ROLE_ADMIN')">
-                    <form method="post" th:action="@{/admin}">
+                <div sec:authorize="hasAuthority('ADMIN')">
+                <form method="post" th:action="@{/admin}">
                         <input type="hidden" name="apartmentId" th:value="${apartment.id}">
                         <input type="hidden" name="dealType" th:value="${type}">
                         <button class="btn btn-success w-100" type="submit" name="action" value="approve">Одобрить</button>
@@ -110,49 +110,5 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script th:inline="javascript">
-    function showPhoneNumber() {
-        const phoneButton = document.getElementById('phoneButton');
-        const phoneNumberDiv = document.getElementById('phoneNumber');
-
-        if (phoneButton && phoneNumberDiv) {
-            phoneButton.classList.add('d-none');
-            phoneNumberDiv.classList.remove('d-none');
-        }
-    }
-
-    function toggleFavorite() {
-        const heartIcon = document.getElementById('heartIcon');
-        const apartmentId = [[${apartment.id}]];
-        const dealType = [[${type}]];
-        const isFavorite = heartIcon.classList.contains('bi-heart-fill');
-
-        const action = isFavorite ? 'deleteFavorite' : 'addFavorite';
-
-        const params = new URLSearchParams();
-        params.append('action', action);
-        params.append('apartmentId', apartmentId);
-        params.append('dealType', dealType);
-
-        fetch('/api/details/favorite', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: params.toString(),
-        })
-            .then(response => response.text())
-            .then(isFavorite => {
-                if (isFavorite === 'true') {
-                    heartIcon.classList.remove('bi-heart');
-                    heartIcon.classList.add('bi-heart-fill');
-                } else {
-                    heartIcon.classList.remove('bi-heart-fill');
-                    heartIcon.classList.add('bi-heart');
-                }
-            })
-            .catch(error => console.error('Ошибка при добавлении в избранное:', error));
-    }
-</script>
 </body>
 </html>
