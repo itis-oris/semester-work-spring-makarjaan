@@ -31,7 +31,7 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             "(:rentType IS NULL OR a.typeOfRent = :rentType) AND " +
             "(:priceMin IS NULL OR (a.dealType = 'sale' AND a.priceSale >= :priceMin) OR (a.dealType = 'rent' AND a.priceRent >= :priceMin)) AND " +
             "(:priceMax IS NULL OR (a.dealType = 'sale' AND a.priceSale <= :priceMax) OR (a.dealType = 'rent' AND a.priceRent <= :priceMax)) AND " +
-            "(:address IS NULL OR a.address LIKE %:address%) AND " +
+            "(:address IS NULL OR LOWER(a.address) LIKE LOWER(CONCAT('%', :address, '%'))) AND " +
             "(:rooms IS NULL OR a.roomsCount = :rooms) AND " +
             "(:propertyType IS NULL OR a.typeOfApartment = :propertyType)")
     List<Apartment> findApartmentsByFilter(
