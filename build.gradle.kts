@@ -54,6 +54,11 @@ dependencies {
     implementation("org.apache.tomcat:tomcat-jsp-api:10.1.20")
     implementation("javax.servlet.jsp:jsp-api:2.1")
     implementation(kotlin("stdlib-jdk8"))
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+
 }
 
 tasks.test {

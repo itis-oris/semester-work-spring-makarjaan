@@ -1,0 +1,45 @@
+### Get all apartments
+GET http://localhost:8080/api/apartments
+Accept: application/json
+
+### Get apartment by ID
+GET http://localhost:8080/api/apartments/1
+Accept: application/json
+
+### Create new apartment
+POST http://localhost:8080/api/apartments
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "title": "Test Apartment",
+  "description": "Test Description",
+  "address": "Test Address",
+  "priceRent": 50000,
+  "priceSale": 5000000,
+  "roomsCount": 2,
+  "area": 60.5,
+  "typeOfApartment": "APARTMENT",
+  "typeOfRent": "LONG_TERM"
+}
+
+### Update apartment
+PUT http://localhost:8080/api/apartments/1
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "title": "Updated Apartment",
+  "description": "Updated Description",
+  "address": "Updated Address",
+  "priceRent": 55000,
+  "priceSale": 5500000,
+  "roomsCount": 3,
+  "area": 65.5,
+  "typeOfApartment": "APARTMENT",
+  "typeOfRent": "LONG_TERM"
+}
+
+### Delete apartment
+DELETE http://localhost:8080/api/apartments/1
+Authorization: Bearer {{auth_token}} 

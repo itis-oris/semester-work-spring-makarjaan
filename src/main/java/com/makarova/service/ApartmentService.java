@@ -8,6 +8,7 @@ import com.makarova.entity.ApartmentStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApartmentService {
     List<ApartmentDto> getByUserIdAndDealType(Long userId, String dealType);
@@ -22,6 +23,8 @@ public interface ApartmentService {
 
     void deleteApartment(Long id);
 
+    List<ApartmentDto> findApartmentsByFilter(ApartmentFilterDto filter);
+
     List<ApartmentDto> getFavoriteApartmentsByEmail(String email);
 
     boolean toggleFavoriteStatus(Long apartmentId, String userEmail, String dealType);
@@ -30,5 +33,11 @@ public interface ApartmentService {
 
     List<ApartmentDto> findApartmentsForSaleAdmin();
 
-    List<ApartmentDto> findApartmentsByFilter(ApartmentFilterDto filter);
+    Optional<Apartment> findById(Long id);
+
+    Apartment save(Apartment apartment);
+
+    void deleteById(Long id);
+
+    List<Apartment> findAll();
 }

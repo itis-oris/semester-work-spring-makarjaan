@@ -7,7 +7,67 @@
     <link th:href="@{/css/main.css}" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet"/>
-
+    <style>
+        .apartment-details {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .apartment-details p {
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+        .price {
+            color: #2c3e50;
+            font-weight: 600;
+            margin: 1.5rem 0;
+            font-size: 1.5rem;
+        }
+        .description {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-top: 2rem;
+        }
+        .carousel {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .action-buttons {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .btn {
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+        }
+        .apartment-title {
+            color: #1a1d20;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .main-content {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .admin-buttons {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/navigation :: navigation}"></div>
@@ -16,7 +76,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div id="carouselExampleRide" class="carousel slide mb-4 shadow" data-bs-ride="carousel">
+            <div id="carouselExampleRide" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div th:each="photo, status : ${apartmnetPhoto}"
                          th:class="'carousel-item ' + ${status.first ? 'active' : ''}">
@@ -32,77 +92,72 @@
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <h2 class="apartment-title fw-bold d-flex align-items-center justify-content-between" style="color: #1a1d20;">
-                <span th:text="${apartment.title}"></span>
-
+            <div class="action-buttons">
                 <div th:if="${isAuthenticated}">
-                    <button id="favoriteButton" class="btn btn-outline-danger ms-3" onclick="toggleFavorite()"
-                            th:attr="data-apartment-id=${apartment.id},data-deal-type=${type}">
-                        <i id="heartIcon"
-                           th:class="'bi ' + (${isFavorite} ? 'bi-heart-fill' : 'bi-heart')"
-                           style="font-size: 1.5em;"></i>
-                    </button>
-                </div>
-            </h2>
-
-            <p class="price fs-4" th:if="${type == 'sale'}">
-                Цена продажи: <span th:text="${apartment.priceSale}"></span> ₽
-            </p>
-
-            <p class="price fs-4" th:if="${type == 'rent'}">
-                Цена аренды: <span th:text="${apartment.priceRent}"></span>
-                <span th:text="${apartment.typeOfRent == 'SHORT_TERM'} ? '₽/сутки' : '₽/мес'"></span>
-            </p>
-
-            <p><strong>Адрес:</strong> <span th:text="${apartment.address}"></span></p>
-            <p><strong>Тип недвижимости:</strong> <span th:text="${apartment.typeOfApartment}"></span></p>
-            <p><strong>Количество комнат:</strong> <span th:text="${apartment.roomsCount}"></span></p>
-            <p><strong>Площадь:</strong> <span th:text="${apartment.area}"></span> м²</p>
-            <p th:if="${type == 'rent'}"><strong>Тип аренды:</strong> <span th:text="${apartment.typeOfRent}"></span></p>
-
-            <div class="d-flex gap-3 mt-4">
-
-                <div th:if="${isAdmin}">
-                    <form method="post" th:action="@{/admin}">
-                        <input type="hidden" name="apartmentId" th:value="${apartment.id}">
-                        <input type="hidden" name="dealType" th:value="${type}">
-                        <button class="btn btn-success w-100" type="submit" name="action" value="approve">Одобрить</button>
-                    </form>
-
-                    <form method="post" th:action="@{/admin}">
-                        <input type="hidden" name="apartmentId" th:value="${apartment.id}">
-                        <input type="hidden" name="dealType" th:value="${type}">
-                        <button class="btn btn-danger w-100" type="submit" name="action" value="reject">Отклонить</button>
-                    </form>
-                </div>
-
-
-                <div th:if="${isAuthenticated}">
-                    <button id="chatToggleButton" class="btn btn-secondary" type="button" onclick="toggleChat()">
+                    <button id="chatToggleButton" class="btn btn-secondary w-100" type="button" onclick="toggleChat()">
                         Написать
                     </button>
                 </div>
 
                 <div th:if="${!isAuthenticated}">
-                    <a class="text-danger" th:href="@{/signIn}">
-                        Войдите, чтобы связаться с арендодателем
+                    <a class="btn btn-danger w-100" th:href="@{/signIn}">
+                        Войти, чтобы связаться с арендодателем
                     </a>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-4 justify-content-center">
-        <div class="col-8 text-center">
-            <p class="description" style="word-wrap: break-word;
-                                  overflow-wrap: break-word;
-                                  white-space: normal;
-                                  word-break: break-all;"
-               th:text="${apartment.description}">
-            </p>
+        <div class="col-md-6">
+            <div class="main-content">
+                <h2 class="apartment-title d-flex align-items-center justify-content-between">
+                    <span th:text="${apartment.title}"></span>
+                    <div th:if="${isAuthenticated}">
+                        <button id="favoriteButton" class="btn btn-outline-danger ms-3" onclick="toggleFavorite()"
+                                th:attr="data-apartment-id=${apartment.id},data-deal-type=${type}">
+                            <i id="heartIcon"
+                               th:class="'bi ' + (${isFavorite} ? 'bi-heart-fill' : 'bi-heart')"
+                               style="font-size: 1.5em;"></i>
+                        </button>
+                    </div>
+                </h2>
+
+                <p class="price" th:if="${type == 'sale'}">
+                    Цена продажи: <span th:text="${apartment.priceSale}"></span> ₽
+                </p>
+
+                <p class="price" th:if="${type == 'rent'}">
+                    Цена аренды: <span th:text="${apartment.priceRent}"></span>
+                    <span th:text="${apartment.typeOfRent == 'SHORT_TERM'} ? '₽/сутки' : '₽/мес'"></span>
+                </p>
+
+                <div class="apartment-details">
+                    <p><strong>Адрес:</strong> <span th:text="${apartment.address}"></span></p>
+                    <p><strong>Тип недвижимости:</strong> <span th:text="${apartment.typeOfApartment}"></span></p>
+                    <p><strong>Количество комнат:</strong> <span th:text="${apartment.roomsCount}"></span></p>
+                    <p><strong>Площадь:</strong> <span th:text="${apartment.area}"></span> м²</p>
+                    <p th:if="${type == 'rent'}"><strong>Тип аренды:</strong> <span th:text="${apartment.typeOfRent}"></span></p>
+                </div>
+
+                <div class="description" th:text="${apartment.description}">
+                </div>
+
+                <div class="admin-buttons" th:if="${isAdmin}">
+                    <div class="d-flex gap-2">
+                        <form method="post" th:action="@{/admin}">
+                            <input type="hidden" name="apartmentId" th:value="${apartment.id}">
+                            <input type="hidden" name="dealType" th:value="${type}">
+                            <button class="btn btn-success" type="submit" name="action" value="approve">Одобрить</button>
+                        </form>
+
+                        <form method="post" th:action="@{/admin}">
+                            <input type="hidden" name="apartmentId" th:value="${apartment.id}">
+                            <input type="hidden" name="dealType" th:value="${type}">
+                            <button class="btn btn-danger" type="submit" name="action" value="reject">Отклонить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -154,5 +209,6 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/auth-menu.js}" defer></script>
 </body>
 </html>

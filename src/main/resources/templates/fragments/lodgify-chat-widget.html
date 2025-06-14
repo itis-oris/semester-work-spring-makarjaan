@@ -1,18 +1,14 @@
 <div th:fragment="widget">
     <div id="chatWidget" class="card shadow-lg animate__animated animate__fadeInUp" style="display:none; position: fixed; bottom: 30px; right: 30px; width: 370px; z-index: 1070; border-radius: 1rem; overflow: hidden;">
         <div class="card-header d-flex align-items-center bg-primary text-white" style="border-bottom: 1px solid #e5e5e5;">
-            <img src="/static/img/logo.png" alt="Lodgify" width="36" height="36" class="rounded-circle me-2 border border-white">
             <div>
                 <div class="fw-bold">Lodgify Chat</div>
-                <div class="text-white-50" style="font-size: 0.9em;">Онлайн</div>
             </div>
             <button type="button" class="btn-close btn-close-white ms-auto" aria-label="Close" onclick="toggleChat()"></button>
         </div>
         <div class="card-body p-0" style="background: #f7f7f7; max-height: 420px; overflow-y: auto;">
             <div class="p-3 border-bottom bg-white">
                 <div class="text-muted small">Объявление</div>
-                <div class="fw-bold">Квартира на Арбате</div>
-                <a href="#" class="text-primary small">Перейти <i class="bi bi-box-arrow-up-right"></i></a>
             </div>
             <div class="p-3">
                 <div id="chatMessages" style="height: 180px; overflow-y: auto; border-radius: 8px; background: #fff; padding: 8px; margin-bottom: 10px;"></div>

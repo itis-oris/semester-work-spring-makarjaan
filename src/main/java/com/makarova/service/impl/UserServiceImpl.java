@@ -3,6 +3,7 @@ package com.makarova.service.impl;
 import com.makarova.dto.UserDto;
 import com.makarova.entity.Role;
 import com.makarova.entity.User;
+import com.makarova.repository.RefreshTokenRepository;
 import com.makarova.repository.UserRepository;
 import com.makarova.service.ApartmentService;
 import com.makarova.service.UserService;
@@ -30,12 +31,14 @@ public class UserServiceImpl implements UserService {
     private final CloudinaryUtil cloudinaryUtil;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ApartmentService apartmentService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, CloudinaryUtil cloudinaryUtil, ApartmentService apartmentService) {
+    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, CloudinaryUtil cloudinaryUtil, ApartmentService apartmentService, RefreshTokenRepository refreshTokenRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.cloudinaryUtil = cloudinaryUtil;
         this.apartmentService = apartmentService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
 
@@ -117,10 +120,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteAccount(UserDto userDto) {
-
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-
+        refreshTokenRepository.deleteByUserId(user.getId());
         apartmentService.deleteByUser(userDto);
         userRepository.delete(user);
     }

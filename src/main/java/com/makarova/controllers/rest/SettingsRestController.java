@@ -1,9 +1,8 @@
-package com.makarova.controllers;
+package com.makarova.controllers.rest;
 
 import com.makarova.dto.ApartmentDto;
 import com.makarova.dto.UserDto;
 import com.makarova.entity.ApartmentStatus;
-import com.makarova.entity.Apartment;
 import com.makarova.service.ApartmentService;
 import com.makarova.service.UserService;
 import lombok.RequiredArgsConstructor;

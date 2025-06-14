@@ -1,5 +1,29 @@
 $(document).ready(function () {
-    $('form').on('submit', function (e) {
+    // Обработка формы удаления аккаунта
+    $('#deleteAccountForm').on('submit', function(e) {
+        e.preventDefault();
+        if (confirm('Вы уверены, что хотите удалить этот аккаунт? Это действие нельзя отменить.')) {
+            const formData = new FormData(this);
+            $.ajax({
+                url: "/api/settings",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    sessionStorage.removeItem('accessToken');
+                    window.location.href = '/main';
+                },
+                error: function(xhr) {
+                    const errorMessage = xhr.responseJSON?.error || "Ошибка при удалении аккаунта";
+                    showErrorMessage(errorMessage);
+                }
+            });
+        }
+    });
+
+    // Обработка остальных форм
+    $('form:not(#deleteAccountForm)').on('submit', function (e) {
         e.preventDefault();
 
         const form = $(this);
