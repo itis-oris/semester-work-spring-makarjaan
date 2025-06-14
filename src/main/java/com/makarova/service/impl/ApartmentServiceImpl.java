@@ -147,40 +147,6 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
 
-    @Override
-    public List<ApartmentDto> findApartmentsByFilter(ApartmentFilterDto filter) {
-        String dealType = null;
-        String rentType = null;
-
-        if (filter != null) {
-            if ("Продажа".equalsIgnoreCase(filter.getDealType())) {
-                dealType = "sale";
-            } else if ("Аренда".equalsIgnoreCase(filter.getDealType())) {
-                dealType = "rent";
-                if (filter.getRentType() != null) {
-                    if ("Посуточно".equalsIgnoreCase(filter.getRentType())) {
-                        rentType = "Посуточно";
-                    } else if ("Долгосрочно".equalsIgnoreCase(filter.getRentType())) {
-                        rentType = "Долгосрочно";
-                    }
-                }
-            }
-        }
-
-        List<Apartment> apartments = apartmentRepository.findApartmentsByFilter(
-                dealType,
-                rentType,
-                filter != null ? filter.getPriceMin() : null,
-                filter != null ? filter.getPriceMax() : null,
-                filter != null ? filter.getAddress() : null,
-                filter != null ? filter.getRooms() : null,
-                filter != null ? filter.getPropertyType() : null
-        );
-
-        return apartments.stream()
-                .map(ApartmentDto::from)
-                .collect(Collectors.toList());
-    }
 
 
     @Override
@@ -229,6 +195,41 @@ public class ApartmentServiceImpl implements ApartmentService {
         ApartmentStatus statusForAdmin = ApartmentStatus.SENT_FOR_VERIFICATION;
 
         List<Apartment> apartments = apartmentRepository.findByDealTypeAndStatus("sale", statusForAdmin);
+
+        return apartments.stream()
+                .map(ApartmentDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ApartmentDto> findApartmentsByFilter(ApartmentFilterDto filter) {
+        String dealType = null;
+        String rentType = null;
+
+        if (filter != null) {
+            if ("Продажа".equalsIgnoreCase(filter.getDealType())) {
+                dealType = "sale";
+            } else if ("Аренда".equalsIgnoreCase(filter.getDealType())) {
+                dealType = "rent";
+                if (filter.getRentType() != null) {
+                    if ("Посуточно".equalsIgnoreCase(filter.getRentType())) {
+                        rentType = "SHORT_TERM";
+                    } else if ("Долгосрочно".equalsIgnoreCase(filter.getRentType())) {
+                        rentType = "LONG_TERM";
+                    }
+                }
+            }
+        }
+
+        List<Apartment> apartments = apartmentRepository.findApartmentsByFilter(
+                dealType,
+                rentType,
+                filter != null ? filter.getPriceMin() : null,
+                filter != null ? filter.getPriceMax() : null,
+                filter != null ? filter.getAddress() : null,
+                filter != null ? filter.getRooms() : null,
+                filter != null ? filter.getPropertyType() : null
+        );
 
         return apartments.stream()
                 .map(ApartmentDto::from)
