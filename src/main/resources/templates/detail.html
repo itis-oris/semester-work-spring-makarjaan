@@ -37,10 +37,13 @@
         <div class="col-md-6">
             <h2 class="apartment-title fw-bold d-flex align-items-center justify-content-between" style="color: #1a1d20;">
                 <span th:text="${apartment.title}"></span>
-                <div sec:authorize="isAuthenticated()">
+
+                <div th:if="${isAuthenticated}">
                     <button id="favoriteButton" class="btn btn-outline-danger ms-3" onclick="toggleFavorite()"
-                            th:attr="data-apartment-id=${apartment.id}">
-                        <i id="heartIcon" th:class="'bi ' + (${isFavorite == 'true'} ? 'bi-heart-fill' : 'bi-heart')" style="font-size: 1.5em;"></i>
+                            th:attr="data-apartment-id=${apartment.id},data-deal-type=${type}">
+                        <i id="heartIcon"
+                           th:class="'bi ' + (${isFavorite} ? 'bi-heart-fill' : 'bi-heart')"
+                           style="font-size: 1.5em;"></i>
                     </button>
                 </div>
             </h2>
@@ -60,19 +63,32 @@
             <p><strong>Площадь:</strong> <span th:text="${apartment.area}"></span> м²</p>
             <p th:if="${type == 'rent'}"><strong>Тип аренды:</strong> <span th:text="${apartment.typeOfRent}"></span></p>
 
-            <p>Authenticated: <span sec:authorize="isAuthenticated()">true</span><span sec:authorize="isAnonymous()">false</span></p>
-            <p>Username: <span sec:authentication="name">anonymous</span></p>
-
             <div class="d-flex gap-3 mt-4">
-                <div sec:authorize="isAuthenticated()">
+
+                <div th:if="${isAdmin}">
+                    <form method="post" th:action="@{/admin}">
+                        <input type="hidden" name="apartmentId" th:value="${apartment.id}">
+                        <input type="hidden" name="dealType" th:value="${type}">
+                        <button class="btn btn-success w-100" type="submit" name="action" value="approve">Одобрить</button>
+                    </form>
+
+                    <form method="post" th:action="@{/admin}">
+                        <input type="hidden" name="apartmentId" th:value="${apartment.id}">
+                        <input type="hidden" name="dealType" th:value="${type}">
+                        <button class="btn btn-danger w-100" type="submit" name="action" value="reject">Отклонить</button>
+                    </form>
+                </div>
+
+
+                <div th:if="${isAuthenticated}">
                     <button id="chatToggleButton" class="btn btn-secondary" type="button" onclick="toggleChat()">
                         Написать
                     </button>
                 </div>
 
-                <div sec:authorize="isAnonymous()">
-                    <a class="text-danger" th:href="@{/authorization}">
-                        Зарегистрируйтесь, чтобы связаться с арендодателем
+                <div th:if="${!isAuthenticated}">
+                    <a class="text-danger" th:href="@{/signIn}">
+                        Войдите, чтобы связаться с арендодателем
                     </a>
                 </div>
             </div>
@@ -95,8 +111,9 @@
     async function toggleFavorite() {
         const button = document.getElementById('favoriteButton');
         const apartmentId = button.getAttribute('data-apartment-id');
+        const dealType = button.getAttribute('data-deal-type');
         try {
-            const response = await fetch(`/api/favorites/${apartmentId}/toggle`, {
+            const response = await fetch(`/api/favorites/${apartmentId}/toggle?dealType=${dealType}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

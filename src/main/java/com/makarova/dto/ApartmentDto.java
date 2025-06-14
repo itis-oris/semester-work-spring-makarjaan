@@ -48,9 +48,9 @@ public class ApartmentDto {
 
     private ApartmentStatus status;
 
-    private Boolean isFavorite;
-
     private String mainPhotoUrl;
+
+    private String createdAt;
 
     public static ApartmentDto from(Apartment apartment) {
         return ApartmentDto.builder()
@@ -67,6 +67,7 @@ public class ApartmentDto {
                 .typeOfRent(apartment.getTypeOfRent())
                 .status(apartment.getStatus())
                 .mainPhotoUrl(apartment.getMainPhotoUrl())
+                .createdAt(apartment.getCreatedAt() != null ? apartment.getCreatedAt().toString() : "")
                 .build();
     }
 }

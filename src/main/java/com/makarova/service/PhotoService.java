@@ -8,4 +8,6 @@ public interface PhotoService {
     List<String> getPhotosByApartmentId(Long apartId, String dealType);
 
     String uploadPhoto(MultipartFile file);
+
+    String getMainPhoto(Long apartId, String dealType);
 }

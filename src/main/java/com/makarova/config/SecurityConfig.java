@@ -67,9 +67,10 @@ public class SecurityConfig {
                                 "/main",
                                 "/api/auth/register",
                                 "/api/**",
-                                "/details"
+                                "/details",
+                                "/apartments"
                         ).permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();

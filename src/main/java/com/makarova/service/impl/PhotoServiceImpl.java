@@ -42,4 +42,13 @@ public class PhotoServiceImpl implements PhotoService {
             throw new RuntimeException("Ошибка при загрузке фото: " + file.getOriginalFilename(), e);
         }
     }
+
+    @Override
+    public String getMainPhoto(Long apartId, String dealType) {
+        List<ApartmentPhoto> photos = apartmentPhotoRepository.findByApartmentIdAndDealType(apartId, dealType);
+        if (photos.isEmpty()) {
+            return "/static/img/no-photo.png";
+        }
+        return photos.get(0).getPhotoUrl();
+    }
 }

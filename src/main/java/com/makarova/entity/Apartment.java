@@ -57,9 +57,6 @@ public class Apartment {
     @Column(name = "type_of_rent")
     private String typeOfRent;
 
-    @Column(name = "is_favorite", nullable = false)
-    private Boolean isFavorite;
-
     @Column(name = "main_photo_url")
     private String mainPhotoUrl;
 

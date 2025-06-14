@@ -6,7 +6,6 @@ import com.makarova.entity.Apartment;
 import com.makarova.service.ApartmentService;
 import com.makarova.service.PhotoService;
 import com.makarova.service.UserService;
-import com.makarova.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

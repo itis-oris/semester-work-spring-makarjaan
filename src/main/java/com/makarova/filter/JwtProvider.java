@@ -29,8 +29,8 @@ public class JwtProvider {
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
-    private static final long ACCESS_EXPIRATION_MINUTES = 5;
-    private static final long REFRESH_EXPIRATION_DAYS = 30;
+    private static final long ACCESS_EXPIRATION_MINUTES = 30;
+    private static final long REFRESH_EXPIRATION_DAYS = 60;
 
     public JwtProvider(
             @Value("${jwt.secret.access}") String jwtAccessSecret,

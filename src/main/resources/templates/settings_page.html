@@ -110,19 +110,27 @@
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
                                                             <li>
-                                                                <form method="post" onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
+                                                                <form th:action="@{/settings}" method="post" 
+                                                                      onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
+                                                                    <input type="hidden" name="action" value="unpublishApartment">
                                                                     <input type="hidden" name="dealType" value="sale">
-                                                                    <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
-                                                                    <input type="hidden" name="status" value="COMPLETED">
-                                                                    <button class="dropdown-item" type="submit">
+                                                                    <input type="hidden" name="apartmentId" th:value="${apartment.id}">
+                                                                    <button class="dropdown-item" type="submit" 
+                                                                            th:if="${apartment.status.name() != 'COMPLETED'}">
                                                                         <i class="bi bi-eye-slash me-2"></i>Снять с публикации
+                                                                    </button>
+                                                                    <button class="dropdown-item" type="submit"
+                                                                            th:if="${apartment.status.name() == 'COMPLETED'}">
+                                                                        <i class="bi bi-eye me-2"></i>Вернуть к публикации
                                                                     </button>
                                                                 </form>
                                                             </li>
                                                             <li>
-                                                                <form method="post" onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
+                                                                <form th:action="@{/settings}" method="post" 
+                                                                      onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
+                                                                    <input type="hidden" name="action" value="deleteApartment">
                                                                     <input type="hidden" name="dealType" value="sale">
-                                                                    <input type="hidden" name="addvertApartIdForDelete" th:value="${apartment.id}">
+                                                                    <input type="hidden" name="apartmentId" th:value="${apartment.id}">
                                                                     <button class="dropdown-item text-danger" type="submit">
                                                                         <i class="bi bi-trash me-2"></i>Удалить
                                                                     </button>
@@ -137,7 +145,12 @@
                                                     <span th:text="${apartment.address}">Адрес</span>
                                                 </p>
                                                 <div class="mt-auto">
-                                                    <span class="badge bg-success" th:text="${apartment.status.displayName}">Статус</span>
+                                                    <span class="badge"
+                                                          th:classappend="
+                                                            ${apartment.status.name() == 'PUBLISHED'} ? 'bg-success' :
+                                                            (${apartment.status.name() == 'ON_MODERATION'} ? 'bg-warning text-dark' :
+                                                            (${apartment.status.name() == 'REFUSED'} ? 'bg-danger' : 'bg-secondary'))"
+                                                          th:text="${apartment.status.displayName}">Статус</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -172,25 +185,27 @@
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
                                                             <li>
-                                                                <form method="post"
-                                                                      onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');"
-                                                                      enctype="multipart/form-data">
+                                                                <form th:action="@{/settings}" method="post" 
+                                                                      onsubmit="return confirm('Вы уверены, что хотите снять с публикации это объявление?');">
                                                                     <input type="hidden" name="action" value="unpublishApartment">
                                                                     <input type="hidden" name="dealType" value="rent">
-                                                                    <input type="hidden" name="addvertApartIdForUnpublish" th:value="${apartment.id}">
-                                                                    <input type="hidden" name="status" th:value="${T(com.makarova.entity.ApartmentStatus).COMPLETED.name()}">
-                                                                    <button class="dropdown-item" type="submit">
+                                                                    <input type="hidden" name="apartmentId" th:value="${apartment.id}">
+                                                                    <button class="dropdown-item" type="submit"
+                                                                            th:if="${apartment.status.name() != 'COMPLETED'}">
                                                                         <i class="bi bi-eye-slash me-2"></i>Снять с публикации
+                                                                    </button>
+                                                                    <button class="dropdown-item" type="submit"
+                                                                            th:if="${apartment.status.name() == 'COMPLETED'}">
+                                                                        <i class="bi bi-eye me-2"></i>Вернуть к публикации
                                                                     </button>
                                                                 </form>
                                                             </li>
                                                             <li>
-                                                                <form method="post"
-                                                                      onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');"
-                                                                      enctype="multipart/form-data">
+                                                                <form th:action="@{/settings}" method="post" 
+                                                                      onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
                                                                     <input type="hidden" name="action" value="deleteApartment">
                                                                     <input type="hidden" name="dealType" value="rent">
-                                                                    <input type="hidden" name="addvertApartIdForDelete" th:value="${apartment.id}">
+                                                                    <input type="hidden" name="apartmentId" th:value="${apartment.id}">
                                                                     <button class="dropdown-item text-danger" type="submit">
                                                                         <i class="bi bi-trash me-2"></i>Удалить
                                                                     </button>
@@ -205,7 +220,12 @@
                                                     <span th:text="${apartment.address}">Адрес</span>
                                                 </p>
                                                 <div class="mt-auto">
-                                                    <span class="badge bg-success" th:text="${apartment.status.displayName}">Статус</span>
+                                                    <span class="badge"
+                                                          th:classappend="
+                                                            ${apartment.status.name() == 'PUBLISHED'} ? 'bg-success' :
+                                                            (${apartment.status.name() == 'ON_MODERATION'} ? 'bg-warning text-dark' :
+                                                            (${apartment.status.name() == 'REFUSED'} ? 'bg-danger' : 'bg-secondary'))"
+                                                          th:text="${apartment.status.displayName}">Статус</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -311,5 +331,6 @@
 <script th:src="@{/js/auth-menu.js}" defer></script>
 <script th:src="@{/js/api-sidebar.js}" defer></script>
 <script th:src="@{/js/settings.js}" defer></script>
+<script th:src="@{/js/auth-menu.js}" defer></script>
 </body>
 </html>

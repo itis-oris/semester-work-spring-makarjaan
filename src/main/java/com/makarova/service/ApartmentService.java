@@ -26,5 +26,9 @@ public interface ApartmentService {
 
     List<ApartmentDto> getFavoriteApartmentsByEmail(String email);
 
-    boolean toggleFavoriteStatus(Long apartmentId, String userEmail);
+    boolean toggleFavoriteStatus(Long apartmentId, String userEmail, String dealType);
+
+    List<ApartmentDto> findApartmentsForRentAdmin();
+
+    List<ApartmentDto> findApartmentsForSaleAdmin();
 }

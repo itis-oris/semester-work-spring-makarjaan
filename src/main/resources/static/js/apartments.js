@@ -3,31 +3,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const rentTypeField = document.getElementById('rentTypeHidden');
     const form = document.querySelector('form');
 
-    dealTypeField.value = 'Продажа';
-    rentTypeField.value = '';
-
     document.getElementById('nav-sale-tab').addEventListener('click', function () {
-        dealTypeField.value = 'Продажа';
+        dealTypeField.value = 'sale';
         rentTypeField.value = '';
-        form.submit();
     });
 
     document.getElementById('nav-rent-tab').addEventListener('click', function () {
-        dealTypeField.value = 'Аренда';
+        dealTypeField.value = 'rent';
         rentTypeField.value = 'Посуточно';
-        form.submit();
     });
 
     document.getElementById('rent-short-tab').addEventListener('click', function () {
-        dealTypeField.value = 'Аренда';
+        dealTypeField.value = 'rent';
         rentTypeField.value = 'Посуточно';
-        form.submit();
     });
 
     document.getElementById('rent-long-tab').addEventListener('click', function () {
-        dealTypeField.value = 'Аренда';
+        dealTypeField.value = 'rent';
         rentTypeField.value = 'Долгосрочно';
-        form.submit();
     });
 
     form.addEventListener('keypress', function(e) {
@@ -37,16 +30,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     form.addEventListener('submit', function(e) {
-        const priceMin = document.getElementById('priceMin').value;
-        const priceMax = document.getElementById('priceMax').value;
-        const address = document.getElementById('address').value;
-        const rooms = document.getElementById('rooms').value;
-        const propertyType = document.getElementById('propertyType').value;
+        const priceMin = document.getElementById('priceMin');
+        const priceMax = document.getElementById('priceMax');
+        const address = document.getElementById('address');
+        const rooms = document.getElementById('rooms');
+        const propertyType = document.getElementById('propertyType');
 
-        if (!priceMin && !priceMax && !address && !rooms && !propertyType) {
-            return true;
-        }
-
-        return true;
+        if (!priceMin.value) priceMin.value = '';
+        if (!priceMax.value) priceMax.value = '';
+        if (!address.value) address.value = '';
+        if (!rooms.value) rooms.value = '';
+        if (!propertyType.value) propertyType.value = '';
     });
 });

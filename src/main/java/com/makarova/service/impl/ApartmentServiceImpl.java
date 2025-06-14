@@ -7,9 +7,11 @@ import com.makarova.entity.Apartment;
 import com.makarova.entity.ApartmentPhoto;
 import com.makarova.entity.ApartmentStatus;
 import com.makarova.entity.User;
+import com.makarova.entity.Favorite;
 import com.makarova.repository.ApartmentPhotoRepository;
 import com.makarova.repository.ApartmentRepository;
 import com.makarova.repository.UserRepository;
+import com.makarova.repository.FavoriteRepository;
 import com.makarova.service.ApartmentService;
 import com.makarova.utils.CloudinaryUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +34,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final ApartmentPhotoRepository apartmentPhotoRepository;
     private final UserRepository userRepository;
+    private final FavoriteRepository favoriteRepository;
     private final CloudinaryUtil cloudinaryUtil;
 
     @Override
@@ -61,7 +65,6 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .status(apartmentDto.getStatus())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .isFavorite(false)
                 .user(user)
                 .build();
 
@@ -128,7 +131,19 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public void deleteApartment(Long id) {
-        apartmentRepository.deleteById(id);
+        Apartment apartment = apartmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
+
+        List<ApartmentPhoto> photos = apartmentPhotoRepository.findByApartmentId(id);
+        for (ApartmentPhoto photo : photos) {
+            try {
+                apartmentPhotoRepository.delete(photo);
+            } catch (Exception e) {
+                System.err.println("Ошибка при удалении фото: " + e.getMessage());
+            }
+        }
+
+        apartmentRepository.delete(apartment);
     }
 
 
@@ -170,22 +185,55 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public List<ApartmentDto> getFavoriteApartmentsByEmail(String email) {
-        List<Apartment> apartments = apartmentRepository.findByUserEmailAndIsFavoriteTrue(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        List<Favorite> favorites = favoriteRepository.findByUser_Id(user.getId());
+        List<Long> apartmentIds = favorites.stream().map(Favorite::getApartmentId).toList();
+        List<Apartment> apartments = apartmentRepository.findAllById(apartmentIds);
         return apartments.stream()
                 .map(ApartmentDto::from)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public boolean toggleFavoriteStatus(Long apartmentId, String userEmail) {
-        Apartment apartment = apartmentRepository.findByIdAndUserEmail(apartmentId, userEmail)
-                .orElseThrow(() -> new RuntimeException("Apartment not found or access denied"));
-
-        apartment.setIsFavorite(!apartment.getIsFavorite());
-        apartmentRepository.save(apartment);
-        return apartment.getIsFavorite();
+    public boolean toggleFavoriteStatus(Long apartmentId, String userEmail, String dealType) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Optional<Favorite> favorite = favoriteRepository.findByUser_IdAndApartmentIdAndDealType(user.getId(), apartmentId, dealType);
+        if (favorite.isPresent()) {
+            favoriteRepository.delete(favorite.get());
+            return false;
+        } else {
+            Favorite newFavorite = new Favorite();
+            newFavorite.setUser(user);
+            newFavorite.setApartmentId(apartmentId);
+            newFavorite.setDealType(dealType);
+            favoriteRepository.save(newFavorite);
+            return true;
+        }
     }
 
+    @Override
+    public List<ApartmentDto> findApartmentsForRentAdmin() {
+        ApartmentStatus statusForAdmin = ApartmentStatus.SENT_FOR_VERIFICATION;
+
+        List<Apartment> apartments = apartmentRepository.findByDealTypeAndStatus("rent", statusForAdmin);
+
+        return apartments.stream()
+                .map(ApartmentDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ApartmentDto> findApartmentsForSaleAdmin() {
+        ApartmentStatus statusForAdmin = ApartmentStatus.SENT_FOR_VERIFICATION;
+
+        List<Apartment> apartments = apartmentRepository.findByDealTypeAndStatus("sale", statusForAdmin);
+
+        return apartments.stream()
+                .map(ApartmentDto::from)
+                .collect(Collectors.toList());
+    }
 
     private ApartmentDto convertToDto(Apartment apartment) {
         return ApartmentDto.from(apartment);

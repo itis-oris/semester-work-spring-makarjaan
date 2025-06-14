@@ -1,6 +1,7 @@
 package com.makarova.repository;
 
 import com.makarova.entity.Apartment;
+import com.makarova.entity.ApartmentStatus;
 import com.makarova.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,10 +28,10 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
         return findByDealTypeAndTypeOfRent(typeRent);
     }
 
+    List<Apartment> findByDealTypeAndStatus(String dealType, ApartmentStatus status);
+
     @Query("SELECT a FROM Apartment a WHERE a.dealType = 'rent' AND a.typeOfRent = :typeRent")
     List<Apartment> findByDealTypeAndTypeOfRent(@Param("typeRent") String typeRent);
-
-    List<Apartment> findByUserEmailAndIsFavoriteTrue(String email);
 
     @Query(value = """
         SELECT * FROM apartment a
@@ -41,7 +42,7 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
           AND (:address IS NULL OR a.address::text ILIKE CONCAT('%', :address, '%'))
           AND (:rooms IS NULL OR a.rooms_count = :rooms)
           AND (:propertyType IS NULL OR a.type_of_apartment = :propertyType)
-          AND a.status = 'Опубликовано'
+          AND a.status = 'PUBLISHED'
         """, nativeQuery = true)
     List<Apartment> findApartmentsByFilter(
             @Param("dealType") String dealType,
@@ -52,5 +53,7 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             @Param("rooms") String rooms,
             @Param("propertyType") String propertyType);
 
+    @Query("SELECT a FROM Apartment a WHERE a.status = 'PUBLISHED'")
+    List<Apartment> findAllPublished();
 
 }

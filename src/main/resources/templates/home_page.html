@@ -28,13 +28,6 @@
             </div>
         </div>
 
-        <div sec:authentication="username">
-            <p>Вы авторизованы как <span sec:authentication="username"></span></p>
-        </div>
-        <div sec:authorize="isAnonymous()">
-            <p>Вы не авторизованы</p>
-        </div>
-
         <div class="container py-5">
             <h2 class="text-center mb-4">Популярные категории</h2>
             <div class="row g-4">
