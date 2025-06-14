@@ -1,0 +1,52 @@
+/* фон для регистрации и авторизации */
+.registration-page {
+    background-image: url("https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780027/registration-back2_e4laqz.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+}
+
+/* над фоном прозрачный блюр */
+.background-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    backdrop-filter: blur(10px);
+}
+
+/* форма для регистрации и авторизации */
+.registration-form {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    margin-bottom: 4px;
+    flex-direction: column;
+}
+
+/* заголовок формы */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* кнопка закрытия */
+.close-btn {
+    font-size: x-large;
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+/* кнопка закрытия при наведении */
+.close-btn:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+

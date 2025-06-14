@@ -1,0 +1,26 @@
+<div th:fragment="widget">
+    <div id="chatWidget" class="card shadow-lg animate__animated animate__fadeInUp" style="display:none; position: fixed; bottom: 30px; right: 30px; width: 370px; z-index: 1070; border-radius: 1rem; overflow: hidden;">
+        <div class="card-header d-flex align-items-center bg-primary text-white" style="border-bottom: 1px solid #e5e5e5;">
+            <div>
+                <div class="fw-bold">Lodgify Chat</div>
+            </div>
+            <button type="button" class="btn-close btn-close-white ms-auto" aria-label="Close" onclick="toggleChat()"></button>
+        </div>
+        <div class="card-body p-0" style="background: #f7f7f7; max-height: 420px; overflow-y: auto;">
+            <div class="p-3 border-bottom bg-white">
+                <div class="text-muted small">Объявление</div>
+            </div>
+            <div class="p-3">
+                <div id="chatMessages" style="height: 180px; overflow-y: auto; border-radius: 8px; background: #fff; padding: 8px; margin-bottom: 10px;"></div>
+                <div class="input-group">
+                    <input id="chatInput" type="text" class="form-control rounded-start-pill" placeholder="Введите сообщение...">
+                    <button id="sendBtn" class="btn btn-primary rounded-end-pill" type="button"><i class="bi bi-send"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script th:src="@{/js/message.js}" defer></script>
+</div>

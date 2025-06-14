@@ -1,0 +1,19 @@
+<changeSet id="2" author="arina">
+    <addColumn tableName="account">
+        <column name="profile_photo_url" type="VARCHAR(255)">
+            <constraints nullable="true"/>
+        </column>
+    </addColumn>
+
+    <addColumn tableName="account">
+        <column name="messengers" type="VARCHAR(255)">
+            <constraints nullable="true"/>
+        </column>
+    </addColumn>
+
+    <addColumn tableName="account">
+        <column name="createdAt" type="LocalDateTime">
+            <constraints nullable="true"/>
+        </column>
+    </addColumn>
+</changeSet>

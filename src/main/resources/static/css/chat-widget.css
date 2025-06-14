@@ -1,0 +1,185 @@
+#chatWidget {
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+#chatWidget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+.card-header {
+    background: linear-gradient(45deg, #3498db, #2980b9) !important;
+    padding: 1rem;
+    border: none;
+}
+
+.card-header img {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.card-header img:hover {
+    transform: scale(1.1);
+}
+
+.btn-close {
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.card-body {
+    background: #f8f9fa !important;
+}
+
+/* Стили для объявления */
+.property-info {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.property-info:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.property-info .text-muted {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.property-info .fw-bold {
+    color: #2c3e50;
+    margin: 0.25rem 0;
+}
+
+.property-info a {
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.property-info a:hover {
+    color: #2980b9 !important;
+}
+
+.property-info a i {
+    transition: transform 0.3s ease;
+}
+
+.property-info a:hover i {
+    transform: translate(2px, -2px);
+}
+
+/* Стили для сообщений */
+#chatMessages {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.message {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    max-width: 85%;
+    position: relative;
+}
+
+.message.sent {
+    background: #3498db;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+.message.received {
+    background: #f1f1f1;
+    color: #2c3e50;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+}
+
+/* Стили для поля ввода */
+.input-group {
+    background: white;
+    border-radius: 25px;
+    padding: 0.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#chatInput {
+    border: none;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+}
+
+#chatInput:focus {
+    box-shadow: none;
+}
+
+#sendBtn {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    transition: all 0.3s ease;
+}
+
+#sendBtn:hover {
+    background: linear-gradient(45deg, #2980b9, #3498db);
+    transform: translateX(2px);
+}
+
+#sendBtn i {
+    transition: transform 0.3s ease;
+}
+
+#sendBtn:hover i {
+    transform: translateX(2px);
+}
+
+/* Анимации */
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate__fadeInUp {
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* Стилизация скроллбара */
+#chatMessages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chatMessages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+} 

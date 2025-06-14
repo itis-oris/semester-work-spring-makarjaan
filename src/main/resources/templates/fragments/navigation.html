@@ -1,0 +1,36 @@
+<div th:fragment="navigation">
+    <nav class="navbar navbar-expand-md px-4">
+        <div class="container">
+
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/main}">
+                <img src="https://res.cloudinary.com/dqm8yufmb/image/upload/v1733780257/IMG_7118_ljnhbj.jpg"
+                     width="30" height="30" class="d-inline-block align-text-top m-2" alt="logo">
+                <span class="logo">Lodgify</span>
+            </a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto" id="authNav"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="custom-divider"></div>
+
+    <nav class="navbar navbar-expand-md px-4">
+        <div class="container">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/main}">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/apartments}">Квартиры</a>
+                    </li>
+                    <li class="nav-item" id="favoritesMenuItem" style="display:none;">
+                        <a class="nav-link" th:href="@{/favorites}">Избранные</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>

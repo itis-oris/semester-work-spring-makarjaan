@@ -1,0 +1,29 @@
+### Login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}
+
+### Register
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "password123",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+
+### Get current user
+GET http://localhost:8080/api/auth/me
+Authorization: Bearer {{auth_token}}
+
+### Logout
+POST http://localhost:8080/api/auth/logout
+Authorization: Bearer {{auth_token}} 

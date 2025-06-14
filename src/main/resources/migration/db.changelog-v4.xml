@@ -1,0 +1,8 @@
+<changeSet id="4" author="arina">
+    <modifyDataType tableName="apartment_photos"
+                    columnName="created_at"
+                    newDataType="TIMESTAMP"/>
+    <addDefaultValue tableName="apartment_photos"
+                     columnName="created_at"
+                     defaultValueComputed="CURRENT_TIMESTAMP"/>
+</changeSet>

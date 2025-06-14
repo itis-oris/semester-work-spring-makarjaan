@@ -1,0 +1,3 @@
+<changeSet id="change-address-type-to-text" author="arina">
+    <modifyDataType tableName="apartment" columnName="address" newDataType="text"/>
+</changeSet>
